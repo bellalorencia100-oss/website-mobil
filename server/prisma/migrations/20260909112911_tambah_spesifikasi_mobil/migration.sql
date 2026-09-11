@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Mobil" ADD COLUMN     "bahanBakar" TEXT NOT NULL DEFAULT 'Bensin',
+ADD COLUMN     "kapasitasMesin" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "kilometer" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "transmisi" TEXT NOT NULL DEFAULT 'Manual',
+ADD COLUMN     "warna" TEXT NOT NULL DEFAULT '-';

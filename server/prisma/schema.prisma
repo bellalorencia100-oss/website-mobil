@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User{
+  id        String    @id
+  username  String @unique
+  password  String
+  email     String @unique
+  fullName  String
+  role String @default("user")
+}
+
+model Category {
+id String @id
+name String
+icon String
+mobils Mobil[]
+}
+
+model Mobil {
+id       String @id
+nama     String
+deskripsi String
+tahun     Int
+harga     Int
+stok      Int
+images     String[]
+categoryId String
+merek String @default("Lainnya")
+kilometer Int @default(0)
+transmisi String @default("Manual")
+bahanBakar String @default("Bensin")
+kapasitasMesin Int @default(0)
+warna String @default("-")
+category   Category  @relation(fields: [categoryId], references: [id])
+}
+
+

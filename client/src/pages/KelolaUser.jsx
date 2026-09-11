@@ -1,0 +1,254 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+const KelolaUser = () => {
+  const [dataUser, setDataUser] = useState([]);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [role, setRole] = useState("");
+  const [password, setPassword] = useState("");
+  const [editId, setEditId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    axios.get("/api/users").then((response) => {
+      setDataUser(response.data.users);
+      setIsLoading(false);
+    });
+  }, []);
+
+  const token = localStorage.getItem("token");
+
+  const handleTambahUser = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    if (!editId) {
+      axios
+        .post("/api/auth/register", {
+          username,
+          password,
+          email,
+          fullName,
+        })
+        .then((response) => {
+          alert(response.data.message);
+          document.getElementById("modal_tambah_user").close();
+
+          axios.get("/api/users").then((response) => {
+            setDataUser(response.data.users);
+          });
+          setUsername("");
+          setPassword("");
+          setEmail("");
+          setFullName("");
+          setRole("");
+          setEditId(null);
+          setIsSubmitting(false);
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+          setPassword("");
+          setIsSubmitting(false);
+          setUsername("");
+          setEmail("");
+          setFullName("");
+          setRole("");
+          setPassword("");
+          setIsSubmitting(false);
+        });
+    } else {
+      axios
+        .put(
+          `/api/users/${editId}`,
+          { username, email, fullName, role },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+
+        .then((response) => {
+          alert(response.data.message);
+          document.getElementById("modal_tambah_user").close();
+
+          axios.get("/api/users").then((response) => {
+            setDataUser(response.data.users);
+          });
+          setUsername("");
+          setEmail("");
+          setFullName("");
+          setRole("");
+          setEditId(null);
+          setIsSubmitting(false);
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+          setIsSubmitting(false);
+        });
+    }
+  };
+  const handleHapusUser = (id) => {
+    if (window.confirm("yakin mau menghapus user id ini")) {
+      axios
+        .delete(`/api/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          alert(response.data.message);
+          axios.get("/api/users").then((response) => {
+            setDataUser(response.data.users);
+          });
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+        });
+    }
+  };
+  const handleEditClick = (user) => {
+    setUsername(user.username);
+    setEmail(user.email);
+    setFullName(user.fullName);
+    setRole(user.role);
+    setEditId(user.id);
+    document.getElementById("modal_tambah_user").showModal();
+  };
+
+  return (
+    <div className="w-full">
+      <button
+        onClick={() => {
+          setUsername("");
+          setEmail("");
+          setFullName("");
+          setRole("");
+          setPassword("");
+          setEditId(null);
+          document.getElementById("modal_tambah_user").showModal();
+        }}
+        className="btn bg-red-700 text-white hover:bg-red-800"
+      >
+        + Tambah User
+      </button>
+
+      {isLoading ? (
+        <div className="flex justify-center items-center h-96">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      ) : (
+        <table className="w-full border-b">
+          <thead>
+            <tr className="bg-gray-100 text-left text-sm">
+              <th className="p-3">Username</th>
+              <th className="p-3">Email</th>
+              <th className="p-3">Nama Lengkap</th>
+              <th className="p-3">Role</th>
+              <th className="p-3">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dataUser.map((user, index) => (
+              <tr key={index} className="border-t">
+                <td className="p-3">{user.username}</td>
+                <td className="p-3">{user.email}</td>
+                <td className="p-3">{user.fullName}</td>
+                <td className="p-3">{user.role}</td>
+                <td className="p-3">
+                  <button
+                    onClick={() => handleEditClick(user)}
+                    className="btn btn-sm bg-red-700 text-white hover:bg-red-800 mr-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleHapusUser(user.id)}
+                    className="btn btn-sm bg-white text-red-700 border border-red-700"
+                  >
+                    Hapus
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <dialog id="modal_tambah_user" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Tambah User</h3>
+
+          {isSubmitting ? (
+            <div className="flex justify-center items-center h-40">
+              <span className="loading loading-spinner loading-lg"></span>
+            </div>
+          ) : (
+            <form onSubmit={handleTambahUser}>
+              <label className="block mt-1">Username</label>
+              <input
+                type="text"
+                placeholder="Username"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+
+              <label className="block mt-1">Email</label>
+              <input
+                type="email"
+                placeholder="Email"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <label className="block mt-1">Nama Lengkap</label>
+              <input
+                type="text"
+                placeholder="Nama lengkap"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+
+              <label className="block mt-1">Role</label>
+              <input
+                type="text"
+                placeholder="Role"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              />
+
+              {!editId && (
+                <div>
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    className="input input-bordered w-full mt-2 text-gray-400"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+              )}
+              <button className="btn bg-red-700 text-white hover:bg-red-800 mt-2">
+                Submit
+              </button>
+            </form>
+          )}
+
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn">Tutup</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+    </div>
+  );
+};
+export default KelolaUser;
