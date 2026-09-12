@@ -99,6 +99,12 @@ const KelolaKategori = () => {
     document.getElementById("modal_tambah_kategori").showModal();
   };
 
+  const getImageUrl = (icon) => {
+    if (!icon) return "";
+    if (icon.startsWith("http")) return icon;
+    return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}${icon}`;
+  };
+
   return (
     <div className="w-full">
       <button
@@ -128,7 +134,7 @@ const KelolaKategori = () => {
               <tr key={index} className="border-t">
                 <td className="p-3">
                   <img
-                    src={kategori.icon}
+                    src={getImageUrl(kategori.icon)}
                     alt={kategori.name}
                     className="w-28 h-20 object-cover rounded"
                   />
