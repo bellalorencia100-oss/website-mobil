@@ -111,7 +111,7 @@ function Navbar() {
           </div>
         </div>
 
-        <div className="drawer-side">
+        <div className="drawer-side z-50">
           <label
             htmlFor="my-drawer-1"
             aria-label="close sidebar"
