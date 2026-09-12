@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import TabsMobil from "../components/TabsMobil.jsx";

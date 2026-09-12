@@ -19,7 +19,7 @@ import {
 } from "react-icons/fa";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 
 //foto logo merek mobil
 import MobilCard from "../components/MobilCard.jsx";

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 
 const KelolaUser = () => {
   const [dataUser, setDataUser] = useState([]);

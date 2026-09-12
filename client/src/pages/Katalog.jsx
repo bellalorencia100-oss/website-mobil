@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 import MobilCard from "../components/MobilCard.jsx";
 import Navbar from "../components/Navbar.jsx";
 import { FaSearch } from "react-icons/fa";

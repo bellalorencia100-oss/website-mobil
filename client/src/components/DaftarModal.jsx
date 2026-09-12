@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 
 function DaftarModal() {
   const [username, setUsername] = useState("");

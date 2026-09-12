@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 import {
   FaCar,
   FaClock,
