@@ -1,6 +1,6 @@
 import express from "express";
 import { upload } from "../middlewares/upload.js";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifyToken, verifyAdmin } from "../middlewares/verifyToken.js";
 
 import {
   createCategory,
@@ -12,11 +12,23 @@ import {
 
 const router = express.Router();
 
-router.post("/", verifyToken, upload.single("icon"), createCategory);
+router.post(
+  "/",
+  verifyToken,
+  verifyAdmin,
+  upload.single("icon"),
+  createCategory,
+);
 router.get("/", getAllCategories);
 router.get("/:id", getCategoryById);
 
-router.put("/:id", verifyToken, upload.single("icon"), updateCategory);
-router.delete("/:id", verifyToken, deleteCategory);
+router.put(
+  "/:id",
+  verifyToken,
+  verifyAdmin,
+  upload.single("icon"),
+  updateCategory,
+);
+router.delete("/:id", verifyToken, verifyAdmin, deleteCategory);
 
 export default router;
