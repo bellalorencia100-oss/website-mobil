@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "../api/axiosInstance";
 import MobilCard from "../components/MobilCard.jsx";
 import Navbar from "../components/Navbar.jsx";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTrash } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa";
 import { FaCar } from "react-icons/fa";
 import pilihanfavorit from "../assets/pilihanfavorit.png";
@@ -29,11 +29,66 @@ function Katalog() {
   const [dropdownTerbuka, setDropdownTerbuka] = useState(false);
   const [keyword, setKeyword] = useState(search || "");
   const itemsPerPage = 12;
+  const [historiPencarian, setHistoriPencarian] = useState([]);
+  const [pencarianFokus, setPencarianFokus] = useState(false);
+  const boxRef = useRef(null);
+  const [isFiltering, setIsFiltering] = useState(false);
+  const pencarianTeratas = [
+    "Honda brio",
+    "Honda Jazz",
+    "Toyota Avanza",
+    "Toyota yaris",
+    "Honda Mobilio",
+    "Honda Civic",
+    "Honda HR-V",
+    "Toyota Agya",
+    "Toyota Fortuner",
+    "Toyota Kijang Innova",
+  ];
+
   useEffect(() => {
     axios.get("/api/mobil").then((responses) => {
       setDataMobil(responses.data.mobil);
     });
   }, []);
+
+  useEffect(() => {
+    const dataTersimpan = localStorage.getItem("historiPencarian");
+    if (dataTersimpan) {
+      setHistoriPencarian(JSON.parse(dataTersimpan));
+    }
+  }, []);
+
+  useEffect(() => {
+    function tanganKlikDiluar(event) {
+      if (boxRef.current && !boxRef.current.contains(event.target)) {
+        setPencarianFokus(false);
+      }
+    }
+    document.addEventListener("mousedown", tanganKlikDiluar);
+    return () => {
+      document.removeEventListener("mousedown", tanganKlikDiluar);
+    };
+  }, []);
+
+  function simpanPencarian(kataKunci) {
+    const historiBaru = [kataKunci, ...historiPencarian];
+    setHistoriPencarian(historiBaru);
+    localStorage.setItem("historiPencarian", JSON.stringify(historiBaru));
+  }
+
+  function hapusHistori() {
+    setHistoriPencarian([]);
+    localStorage.removeItem("historiPencarian");
+  }
+
+  const handleFilterClick = (params) => {
+    setIsFiltering(true);
+    setTimeout(() => {
+      setSearchParams(params);
+      setIsFiltering(false);
+    }, 400);
+  };
 
   let mobilTerfilter = merek
     ? dataMobil.filter(
@@ -124,70 +179,128 @@ function Katalog() {
     <>
       <Navbar />
       <div className="bg-white rounded-lg">
-        <div className="max-w-4xl mx-auto mt-10 px-3 relative">
+        <div className="max-w-4xl mx-auto mt-10 px-3 relative" ref={boxRef}>
           <input
             type="text"
             placeholder="Cari mobil"
             className="input input-bordered w-full"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            onFocus={() => setPencarianFokus(true)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setSearchParams(
                   merek ? { merek, search: keyword } : { search: keyword },
                 );
+                simpanPencarian(keyword);
               }
             }}
           />
           <FaSearch className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400" />
+
+          {pencarianFokus && (
+            <div className="absolute left-3 right-3 bg-white border border-gray-200 rounded-lg shadow-lg p-4 mt-2 z-20">
+              {historiPencarian.length > 0 && (
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-bold text-gray-700 mb-2">
+                      Histori Pencarian
+                    </p>
+                    <FaTrash
+                      className="text-xs text-black cursor-pointer"
+                      onClick={hapusHistori}
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {historiPencarian.map((item, index) => (
+                      <span
+                        key={index}
+                        className="bg-red-50 text-red-700 text-xs font-semibold px-3 py-1.5 rounded-full cursor-pointer"
+                        onClick={() => {
+                          setKeyword(item);
+                          simpanPencarian(item);
+                          setSearchParams(
+                            merek ? { merek, search: item } : { search: item },
+                          );
+                        }}
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <p className="text-xs font-bold text-gray-700 mb-2">
+                Pencarian Teratas 🔥
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {pencarianTeratas.map((item, index) => (
+                  <span
+                    key={index}
+                    className="bg-red-50 text-red-700 text-xs font-semibold px-3 py-1.5 rounded-full cursor-pointer"
+                    onClick={() => {
+                      setKeyword(item);
+                      simpanPencarian(item);
+                      setSearchParams(
+                        merek ? { merek, search: item } : { search: item },
+                      );
+                    }}
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="max-w-4xl mx-auto px-3 relative mt-4">
           <div className="flex gap-2 overflow-x-auto justify-between">
             <button
               className="px-9 py-2 rounded-lg bg-red-700 border text-white text-sm font-semibold"
-              onClick={() => setSearchParams({})}
+              onClick={() => handleFilterClick({})}
             >
               Semua
             </button>
             <button
               className="px-7 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 text-sm font-semibold"
-              onClick={() => setSearchParams({ merek: "Toyota" })}
+              onClick={() => handleFilterClick({ merek: "Toyota" })}
             >
               Toyota
             </button>
 
             <button
               className="px-7 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 text-sm font-semibold"
-              onClick={() => setSearchParams({ merek: "Honda" })}
+              onClick={() => handleFilterClick({ merek: "Honda" })}
             >
               Honda
             </button>
 
             <button
               className="px-7 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 text-sm font-semibold"
-              onClick={() => setSearchParams({ merek: "Mazda" })}
+              onClick={() => handleFilterClick({ merek: "Mazda" })}
             >
               Mazda
             </button>
 
             <button
               className="px-7 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 text-sm font-semibold"
-              onClick={() => setSearchParams({ merek: "MG" })}
+              onClick={() => handleFilterClick({ merek: "MG" })}
             >
               MG
             </button>
 
             <button
               className="px-7 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 text-sm font-semibold"
-              onClick={() => setSearchParams({ merek: "Lexus" })}
+              onClick={() => handleFilterClick({ merek: "Lexus" })}
             >
               Lexus
             </button>
 
             <button
               className="px-7 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 text-sm font-semibold"
-              onClick={() => setSearchParams({ merek: "Bmw" })}
+              onClick={() => handleFilterClick({ merek: "Bmw" })}
             >
               BMW
             </button>
@@ -205,7 +318,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Byd" });
+                  handleFilterClick({ merek: "Byd" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -214,7 +327,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Mercedes Benz" });
+                  handleFilterClick({ merek: "Mercedes Benz" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -223,7 +336,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Hyundai" });
+                  handleFilterClick({ merek: "Hyundai" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -232,7 +345,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Mitsubishi" });
+                  handleFilterClick({ merek: "Mitsubishi" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -241,7 +354,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Chevrolet" });
+                  handleFilterClick({ merek: "Chevrolet" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -250,7 +363,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Suzuki" });
+                  handleFilterClick({ merek: "Suzuki" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -259,7 +372,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Nissan" });
+                  handleFilterClick({ merek: "Nissan" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -268,7 +381,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Isuzu" });
+                  handleFilterClick({ merek: "Isuzu" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -277,7 +390,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Dfsk" });
+                  handleFilterClick({ merek: "Dfsk" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -286,7 +399,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Ford" });
+                  handleFilterClick({ merek: "Ford" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -295,7 +408,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Jeep" });
+                  handleFilterClick({ merek: "Jeep" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -304,7 +417,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Volkswagen" });
+                  handleFilterClick({ merek: "Volkswagen" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -313,7 +426,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Mini" });
+                  handleFilterClick({ merek: "Mini" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -322,7 +435,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Kia" });
+                  handleFilterClick({ merek: "Kia" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -331,7 +444,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Wuling" });
+                  handleFilterClick({ merek: "Wuling" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -340,7 +453,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Cherry" });
+                  handleFilterClick({ merek: "Cherry" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -349,7 +462,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Gwm" });
+                  handleFilterClick({ merek: "Gwm" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -358,7 +471,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Honda" });
+                  handleFilterClick({ merek: "Honda" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -367,7 +480,7 @@ function Katalog() {
               <div
                 className="px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 rounded cursor-pointer"
                 onClick={() => {
-                  setSearchParams({ merek: "Baic" });
+                  handleFilterClick({ merek: "Baic" });
                   setDropdownTerbuka(false);
                 }}
               >
@@ -511,6 +624,11 @@ function Katalog() {
         <h2 className="text-xl font-bold">FAQ lainnya</h2>
       </div>
       <Footer />
+      {isFiltering && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999]">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
     </>
   );
 }

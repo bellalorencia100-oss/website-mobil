@@ -249,10 +249,13 @@ function Home() {
             </p>
           </div>
         </div>
-        <button className="w-full md:w-auto flex items-center justify-center gap-2 bg-white text-red-700 font-semibold px-5 py-2 rounded hover:bg-red-100 transition whitespace-nowrap">
+        <Link
+          to="/jual-mobil"
+          className="w-full md:w-auto flex items-center justify-center gap-2 bg-white text-red-700 font-semibold px-5 py-2 rounded hover:bg-red-100 transition whitespace-nowrap"
+        >
           <FaPlus />
-          Pasang Iklan Sekarang
-        </button>
+          Jual Mobil Sekarang
+        </Link>
       </div>
       <div className="bg-red-50">
         <div className="bg-red-700 py-6 mb-6">

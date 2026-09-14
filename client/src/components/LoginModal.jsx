@@ -1,21 +1,20 @@
 import { useState } from "react";
 import axios from "../api/axiosInstance";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginModal({ setLoggedIn }) {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [emailError, setEmailError] = useState("");
+  const [identifierError, setIdentifierError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const validateEmail = (value) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validateIdentifier = (value) => {
     if (!value) {
-      setEmailError("Email tidak boleh kosong");
-    } else if (!emailRegex.test(value)) {
-      setEmailError("Format email tidak valid");
+      setIdentifierError("Email atau username tidak boleh kosong");
     } else {
-      setEmailError("");
+      setIdentifierError("");
     }
   };
 
@@ -33,8 +32,9 @@ function LoginModal({ setLoggedIn }) {
     axios
       .post("/api/auth/login", {
         password,
-        email,
+        identifier,
       })
+
       .then((response) => {
         alert(response.data.message);
         document.getElementById("my_modal_1").close();
@@ -50,32 +50,48 @@ function LoginModal({ setLoggedIn }) {
       });
   };
 
+  const handleGoToDaftar = () => {
+    document.getElementById("my_modal_1").close();
+    document.getElementById("my_modal_2").showModal();
+  };
+
   return (
     <dialog id="my_modal_1" className="modal">
       <div className="modal-box">
         <h3 className="font-bold text-lg text-red-700">Login</h3>
         <p className="py-2 text-sm text-gray-500">Masuk Ke Akun Mobilku</p>
         <form className="flex flex-col gap-3 mt-4" onSubmit={handleLogin}>
-          <label className="block mt-1">Email</label>
+          <label className="block mt-1">Email atau Username</label>
           <input
-            type="email"
-            placeholder="email"
+            type="text"
+            placeholder="email atau username"
             className="input input-bordered w-full"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onBlur={(e) => validateEmail(e.target.value)}
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+            onBlur={(e) => validateIdentifier(e.target.value)}
           />
-          {emailError && <p className="text-red-600 text-xs">{emailError}</p>}
+          {identifierError && (
+            <p className="text-red-600 text-xs">{identifierError}</p>
+          )}
 
           <label className="block mt-1">Password</label>
-          <input
-            type="password"
-            placeholder="password"
-            className="input input-bordered w-full"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onBlur={(e) => validatePassword(e.target.value)}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="password"
+              className="input input-bordered w-full pr-10"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={(e) => validatePassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
           {passwordError && (
             <p className="text-red-600 text-xs">{passwordError}</p>
           )}
@@ -90,6 +106,17 @@ function LoginModal({ setLoggedIn }) {
               "Login"
             )}
           </button>
+
+          <p className="text-center text-sm text-gray-500 mt-2">
+            Belum punya akun?{" "}
+            <button
+              type="button"
+              onClick={handleGoToDaftar}
+              className="text-red-700 font-semibold hover:underline cursor-pointer"
+            >
+              Daftar di sini
+            </button>
+          </p>
         </form>
         <div className="modal-action">
           <form method="dialog">

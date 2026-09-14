@@ -17,6 +17,7 @@ model User{
   password  String
   email     String @unique
   fullName  String
+  noHp      String?
   role String @default("user")
 }
 

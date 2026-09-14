@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "../api/axiosInstance";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-function DaftarModal() {
+function DaftarModal({ setLoggedIn }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -13,6 +14,8 @@ function DaftarModal() {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const validateEmail = (value) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -80,10 +83,15 @@ function DaftarModal() {
         email,
         fullName,
       })
+
       .then((response) => {
         alert(response.data.message);
         document.getElementById("my_modal_2").close();
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        setLoggedIn(true);
       })
+
       .catch((error) => {
         alert(error.response.data.message);
       })
@@ -123,10 +131,12 @@ function DaftarModal() {
           />
           {emailError && <p className="text-red-600 text-xs">{emailError}</p>}
           <label className="block mt-1">Username</label>
+
           <input
             type="text"
             placeholder="Username"
             className="input input-bordered w-full"
+            autoComplete="off"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             onBlur={(e) => validateUsername(e.target.value)}
@@ -136,27 +146,45 @@ function DaftarModal() {
           )}
 
           <label className="block mt-1">Password</label>
-          <input
-            type="password"
-            placeholder="Password"
-            className="input input-bordered w-full"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onBlur={(e) => validatePassword(e.target.value)}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="input input-bordered w-full pr-10"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={(e) => validatePassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
           {passwordError && (
             <p className="text-red-600 text-xs">{passwordError}</p>
           )}
 
           <label className="block mt-1">Konfirmasi Password</label>
-          <input
-            type="password"
-            placeholder="Konfirmasi Password"
-            className="input input-bordered w-full"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            onBlur={(e) => validateConfirmPassword(e.target.value)}
-          />
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Konfirmasi Password"
+              className="input input-bordered w-full pr-10"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              onBlur={(e) => validateConfirmPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+            >
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
           {confirmPasswordError && (
             <p className="text-red-600 text-xs">{confirmPasswordError}</p>
           )}

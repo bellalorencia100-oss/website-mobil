@@ -34,27 +34,38 @@ export const registerUser = async (req, res) => {
     },
   });
 
+  const token = jwt.sign(
+    { id: newUser.id, username: newUser.username, role: newUser.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" },
+  );
+
   const { password: pw, ...userData } = newUser;
   return res.status(201).json({
     message: "berhasil mendaftar silahkan login",
-    userData,
+    token,
+    user: userData,
   });
 };
 
 //LOGIKA LOGIN
 export const loginUser = async (req, res) => {
-  const { password, email } = req.body;
+  const { password, identifier } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: "email dan pasword wajib di isi!" });
+  if (!identifier || !password) {
+    return res
+      .status(400)
+      .json({ message: "email/username dan password wajib di isi!" });
   }
 
-  const foundUser = await prisma.user.findUnique({
-    where: { email: email },
+  const foundUser = await prisma.user.findFirst({
+    where: {
+      OR: [{ email: identifier }, { username: identifier }],
+    },
   });
 
   if (!foundUser) {
-    return res.status(404).json({ message: "email tidak ditemukan" });
+    return res.status(404).json({ message: "email/username tidak ditemukan" });
   }
 
   const isPasswordvalid = await bcrypt.compare(password, foundUser.password);
@@ -81,4 +92,62 @@ export const loginUser = async (req, res) => {
       role: foundUser.role,
     },
   });
+};
+
+//LOGIKA AMBIL DATA PROFIL
+export const getProfile = async (req, res) => {
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.id },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "user tidak ditemukan" });
+  }
+  const { password, ...userData } = user;
+  return res.status(200).json({ user: userData });
+};
+
+//LOGIKA UPDATE DATA PROFILE
+export const updateProfile = async (req, res) => {
+  const { fullName, noHp } = req.body;
+
+  const updatedUser = await prisma.user.update({
+    where: { id: req.user.id },
+    data: { fullName, noHp },
+  });
+
+  const { password, ...userData } = updatedUser;
+  return res
+    .status(200)
+    .json({ message: "profile berhasil di perbarui", user: userData });
+};
+
+//LOGIKA UBAH PASSWORD
+export const changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    return res
+      .status(400)
+      .json({ message: "password lama dan password baru wajib di isi" });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.id },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "user tidak ditemukan" });
+  }
+  const isPasswordvalid = await bcrypt.compare(oldPassword, user.password);
+  if (!isPasswordvalid) {
+    return res.status(401).json({ message: "password lama tidak benar" });
+  }
+
+  const hashNewPassword = await bcrypt.hash(newPassword, 10);
+  await prisma.user.update({
+    where: { id: req.user.id },
+    data: { password: hashNewPassword },
+  });
+  return res.status(200).json({ message: "password berhasil di ubah" });
 };
