@@ -1,9 +1,3 @@
-import Admin from "./pages/Admin.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import KelolaMobil from "./pages/KelolaMobil.jsx";
-import KelolaKategori from "./pages/KelolaKategori.jsx";
-import KelolaUser from "./pages/KelolaUser.jsx";
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Katalog from "./pages/Katalog.jsx";
 import TentangKami from "./pages/TentangKami.jsx";
 import DetailMobil from "./pages/DetailMobil.jsx";
@@ -34,7 +28,6 @@ function App() {
             </RequireAuth>
           }
         />
-
         <Route
           path="/profile"
           element={
@@ -43,20 +36,6 @@ function App() {
             </RequireAuth>
           }
         />
-
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <Admin />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Dashboard />} />
-          <Route path="mobil" element={<KelolaMobil />} />
-          <Route path="kategori" element={<KelolaKategori />} />
-          <Route path="user" element={<KelolaUser />} />
-        </Route>
       </Routes>
     </>
   );

@@ -12,6 +12,8 @@ const KelolaMobil = () => {
   const [stok, setStok] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [images, setImages] = useState([]);
+  const [imagesAsli, setImagesAsli] = useState([]);
+  const [fotoLama, setFotoLama] = useState([]);
   const [editId, setEditId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,9 +44,11 @@ const KelolaMobil = () => {
       alert("Maksimal 4 foto per mobil");
       e.target.value = "";
       setImages([]);
+      setImagesAsli([]);
       return;
     }
     setImages(filesTerpilih);
+    setImagesAsli(filesTerpilih);
     if (filesTerpilih.length > 0) {
       setCropIndex(0);
       setCropImageSrc(URL.createObjectURL(filesTerpilih[0]));
@@ -56,15 +60,20 @@ const KelolaMobil = () => {
     const fotoUtama = images[index];
     const sisanya = images.filter((_, i) => i !== index);
     setImages([fotoUtama, ...sisanya]);
+
+    const asliUtama = imagesAsli[index];
+    const asliSisanya = imagesAsli.filter((_, i) => i !== index);
+    setImagesAsli([asliUtama, ...asliSisanya]);
+
     setCropIndex(0);
-    setCropImageSrc(URL.createObjectURL(fotoUtama));
+    setCropImageSrc(URL.createObjectURL(asliUtama));
     setCropModalOpen(true);
   };
 
   const bukaCropUtama = () => {
-    if (!images[0]) return;
+    if (!imagesAsli[0]) return;
     setCropIndex(0);
-    setCropImageSrc(URL.createObjectURL(images[0]));
+    setCropImageSrc(URL.createObjectURL(imagesAsli[0]));
     setCropModalOpen(true);
   };
 
@@ -208,19 +217,38 @@ const KelolaMobil = () => {
     setWarna(mobil.warna ?? "");
     setEditId(mobil.id);
     setImages([]);
+    setImagesAsli([]);
+    setFotoLama(mobil.images || []);
     document.getElementById("modal_tambah_mobil").showModal();
   };
 
   return (
     <div className="w-full">
       <button
-        onClick={() =>
-          document.getElementById("modal_tambah_mobil").showModal()
-        }
+        onClick={() => {
+          setNama("");
+          setDeskripsi("");
+          setTahun("");
+          setHarga("");
+          setStok("");
+          setCategoryId("");
+          setMerek("");
+          setKilometer("");
+          setTransmisi("");
+          setBahanBakar("");
+          setKapasitasMesin("");
+          setWarna("");
+          setImages([]);
+          setImagesAsli([]);
+          setFotoLama([]);
+          setEditId(null);
+          document.getElementById("modal_tambah_mobil").showModal();
+        }}
         className="btn bg-red-700 text-white hover:bg-red-800"
       >
         + Tambah Mobil Baru
       </button>
+
       {isLoading ? (
         <div className="flex justify-center items-center h-96">
           <span className="loading loading-spinner loading-lg"></span>
@@ -282,7 +310,9 @@ const KelolaMobil = () => {
       )}
       <dialog id="modal_tambah_mobil" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg text-red-700">Tambah Mobil Baru</h3>
+          <h3 className="font-bold text-lg text-red-700">
+            {editId ? "Edit Mobil" : "Tambah Mobil Baru"}
+          </h3>
           {isSubmitting ? (
             <div className="flex justify-center items-center h-40 bg-black/10 rounded-lg">
               <span className="loading loading-spinner loading-lg"></span>
@@ -403,7 +433,6 @@ const KelolaMobil = () => {
                 <option value="Wuling">Wuling</option>
                 <option value="Cherry">Cherry</option>
                 <option value="Gwm">Gwm</option>
-                <option value="XPeng">XPeng</option>
                 <option value="Baic">Baic</option>
               </select>
 
@@ -436,6 +465,25 @@ const KelolaMobil = () => {
                 className="file-input file-input-bordered w-full mt-3"
                 onChange={handlePilihFoto}
               />
+
+              {editId && fotoLama.length > 0 && images.length === 0 && (
+                <div className="mt-2">
+                  <p className="text-xs text-gray-500 mb-1">
+                    Foto saat ini (akan tetap dipakai jika tidak pilih foto
+                    baru):
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {fotoLama.map((url, index) => (
+                      <img
+                        key={index}
+                        src={url}
+                        alt={`foto-lama-${index}`}
+                        className="w-16 h-16 object-cover rounded border"
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {images.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -490,7 +538,7 @@ const KelolaMobil = () => {
         {cropModalOpen && (
           <CropModal
             imageSrc={cropImageSrc}
-            fileName={images[cropIndex]?.name || "foto-utama.jpg"}
+            fileName={imagesAsli[cropIndex]?.name || "foto-utama.jpg"}
             onClose={() => setCropModalOpen(false)}
             onSimpan={handleSimpanCrop}
           />

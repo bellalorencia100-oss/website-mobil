@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [totalKategori, setTotalKategori] = useState(0);
   const [totalUser, setTotalUser] = useState(0);
   const [totalStok, setTotalStok] = useState(0);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     axios.get("/api/mobil").then((response) => {
@@ -23,9 +24,19 @@ const Dashboard = () => {
     axios.get("/api/categories").then((response) => {
       setTotalKategori(response.data.categories.length);
     });
-    axios.get("/api/users").then((response) => {
-      setTotalUser(response.data.users.length);
-    });
+
+    axios
+      .get("/api/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setTotalUser(response.data.users.length);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (

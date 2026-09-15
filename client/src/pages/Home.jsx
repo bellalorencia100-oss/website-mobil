@@ -20,9 +20,9 @@ import {
 
 import { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
+import MobilCard from "../components/MobilCard.jsx";
 
 //foto logo merek mobil
-import MobilCard from "../components/MobilCard.jsx";
 import byd from "../assets/byd.png";
 import mercedesbenz from "../assets/mercedesbenz.png";
 import hyundai from "../assets/hyundai.png";
@@ -61,11 +61,22 @@ import CategoryCard from "../components/CategoryCard.jsx";
 
 function Home() {
   const [dataMobil, setDataMobil] = useState([]);
+  const [dataKategori, setDataKategori] = useState([]);
   useEffect(() => {
     axios.get("/api/mobil").then((response) => {
       setDataMobil(response.data.mobil);
     });
+
+    axios.get("/api/categories").then((response) => {
+      setDataKategori(response.data.categories);
+    });
   }, []);
+
+  const getImageUrl = (icon) => {
+    if (!icon) return "";
+    if (icon.startsWith("http")) return icon;
+    return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}${icon}`;
+  };
 
   //gambar penilaian terbaik
   const dataFeature = [
@@ -179,6 +190,32 @@ function Home() {
         <CategoryCard name="Honda" logo={Honda} />
         <CategoryCard name="Baic" logo={baic} />
       </div>
+
+      {dataKategori.length > 0 && (
+        <>
+          <div className="text-center max-w-4xl mx-auto mt-14 md:mt-16">
+            <p className="text-red-700 text-xs font-bold tracking-wide mb-2">
+              — PILIH KATEGORI
+            </p>
+            <h2 className="text-2xl font-extrabold text-gray-900">
+              Cari Berdasarkan{" "}
+              <span className="text-red-700">Kategori Mobil</span>
+            </h2>
+          </div>
+          <div className="flex flex-nowrap justify-center items-start gap-x-5 md:gap-x-8 overflow-x-auto px-4 mt-6 md:mt-10 max-w-4xl mx-auto">
+            {dataKategori.map((kategori) => (
+              <div key={kategori.id} className="shrink-0 scale-80 md:scale-100">
+                <CategoryCard
+                  name={kategori.name}
+                  logo={getImageUrl(kategori.icon)}
+                  categoryId={kategori.id}
+                />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
       <div className="grid grid-cols-2 md:flex md:justify-center gap-8 max-w-4xl mx-auto py-6">
         <div className="flex items-center justify-center gap-2">
           <FaShieldAlt className="text-red-600 text-2xl" />

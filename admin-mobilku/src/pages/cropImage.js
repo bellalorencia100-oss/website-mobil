@@ -1,3 +1,8 @@
+function pastikanEkstensiJpg(nama) {
+  const namaTanpaEkstensi = nama.replace(/\.[^/.]+$/, "");
+  return `${namaTanpaEkstensi}.jpg`;
+}
+
 export function getCroppedImg(
   imageSrc,
   croppedAreaPixels,
@@ -32,7 +37,9 @@ export function getCroppedImg(
             reject(new Error("Gagal memproses gambar"));
             return;
           }
-          const file = new File([blob], fileName, { type: "image/jpeg" });
+          const file = new File([blob], pastikanEkstensiJpg(fileName), {
+            type: "image/jpeg",
+          });
           resolve(file);
         },
         "image/jpeg",

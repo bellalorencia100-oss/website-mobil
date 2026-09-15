@@ -12,14 +12,24 @@ const KelolaUser = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    axios.get("/api/users").then((response) => {
-      setDataUser(response.data.users);
-      setIsLoading(false);
-    });
-  }, []);
-
   const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    axios
+      .get("/api/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setDataUser(response.data.users);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
+  }, []);
 
   const handleTambahUser = (e) => {
     e.preventDefault();
@@ -37,9 +47,16 @@ const KelolaUser = () => {
           alert(response.data.message);
           document.getElementById("modal_tambah_user").close();
 
-          axios.get("/api/users").then((response) => {
-            setDataUser(response.data.users);
-          });
+          axios
+            .get("/api/users", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              setDataUser(response.data.users);
+            });
+
           setUsername("");
           setPassword("");
           setEmail("");
@@ -70,14 +87,19 @@ const KelolaUser = () => {
             },
           },
         )
-
         .then((response) => {
           alert(response.data.message);
           document.getElementById("modal_tambah_user").close();
 
-          axios.get("/api/users").then((response) => {
-            setDataUser(response.data.users);
-          });
+          // langsung update baris user ini di tabel, tanpa perlu fetch ulang
+          setDataUser((prevDataUser) =>
+            prevDataUser.map((user) =>
+              user.id === editId
+                ? { ...user, username, email, fullName, role }
+                : user,
+            ),
+          );
+
           setUsername("");
           setEmail("");
           setFullName("");
@@ -91,6 +113,7 @@ const KelolaUser = () => {
         });
     }
   };
+
   const handleHapusUser = (id) => {
     if (window.confirm("yakin mau menghapus user id ini")) {
       axios
@@ -101,10 +124,17 @@ const KelolaUser = () => {
         })
         .then((response) => {
           alert(response.data.message);
-          axios.get("/api/users").then((response) => {
-            setDataUser(response.data.users);
-          });
+          axios
+            .get("/api/users", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              setDataUser(response.data.users);
+            });
         })
+
         .catch((error) => {
           alert(error.response.data.message);
         });

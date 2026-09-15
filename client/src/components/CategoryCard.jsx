@@ -1,21 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function CategoryCard({ name, logo }) {
+function CategoryCard({ name, logo, categoryId }) {
   const [isNavigating, setIsNavigating] = useState(false);
   const navigate = useNavigate();
+
+  const target = categoryId
+    ? `/katalog?kategori=${categoryId}`
+    : `/katalog?merek=${name}`;
 
   const handleClick = (e) => {
     e.preventDefault();
     setIsNavigating(true);
     setTimeout(() => {
-      navigate(`/katalog?merek=${name}`);
+      navigate(target);
       setIsNavigating(false);
     }, 400);
   };
   return (
     <div className="flex flex-col items-center gap-2">
-      <Link to={`/katalog?merek=${name}`} onClick={handleClick}>
+      <Link to={target} onClick={handleClick}>
         <div className="w-14 h-14 bg-white rounded-lg shadow-sm border border-gray-100 flex items-center justify-center p-2 transition hover:shadow-md hover:border-red-300 hover:scale-110 active:shadow-md active:border-red-300 active:scale-110">
           <img src={logo} className="w-8 h-8 object-contain" />
         </div>

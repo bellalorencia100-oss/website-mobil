@@ -22,9 +22,11 @@ import { useSearchParams } from "react-router-dom";
 
 function Katalog() {
   const [dataMobil, setDataMobil] = useState([]);
+  const [dataKategoriList, setDataKategoriList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const merek = searchParams.get("merek");
   const search = searchParams.get("search");
+  const kategori = searchParams.get("kategori");
   const [currentPage, setCurrentPage] = useState(1);
   const [dropdownTerbuka, setDropdownTerbuka] = useState(false);
   const [keyword, setKeyword] = useState(search || "");
@@ -49,6 +51,10 @@ function Katalog() {
   useEffect(() => {
     axios.get("/api/mobil").then((responses) => {
       setDataMobil(responses.data.mobil);
+    });
+
+    axios.get("/api/categories").then((responses) => {
+      setDataKategoriList(responses.data.categories);
     });
   }, []);
 
@@ -96,11 +102,21 @@ function Katalog() {
       )
     : dataMobil;
 
+  if (kategori) {
+    mobilTerfilter = mobilTerfilter.filter(
+      (mobil) => mobil.categoryId === kategori,
+    );
+  }
+
   if (search) {
     mobilTerfilter = mobilTerfilter.filter((mobil) =>
       mobil.nama.toLowerCase().includes(search.toLowerCase()),
     );
   }
+
+  const namaKategoriTerpilih = kategori
+    ? dataKategoriList.find((k) => k.id === kategori)?.name
+    : null;
 
   const totalPages = Math.ceil(mobilTerfilter.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -558,14 +574,16 @@ function Katalog() {
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <FaCar className="text-5xl text-gray-300 mb-4" />
             <p className="text-lg font-bold text-gray-700">
-              {merek
-                ? `Belum ada mobil merek ${merek} saat ini`
-                : search
-                  ? `Mobil "${search}" tidak ditemukan`
-                  : "Belum ada mobil yang tersedia"}
+              {kategori
+                ? `Belum ada mobil kategori ${namaKategoriTerpilih || "ini"} saat ini`
+                : merek
+                  ? `Belum ada mobil merek ${merek} saat ini`
+                  : search
+                    ? `Mobil "${search}" tidak ditemukan`
+                    : "Belum ada mobil yang tersedia"}
             </p>
             <p className="text-sm text-gray-500 mt-1">
-              Coba pilih merek lain atau cek kembali nanti ya.
+              Coba pilih kategori atau merek lain, atau cek kembali nanti ya.
             </p>
           </div>
         ) : (
