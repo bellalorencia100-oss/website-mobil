@@ -6,6 +6,7 @@ import JualMobil from "./pages/JualMobil.jsx";
 import Profile from "./pages/Profil.jsx";
 import RequireAuth from "./components/RequireAuth.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 import Home from "./pages/Home.jsx";
 import { Routes, Route } from "react-router-dom";
@@ -36,6 +37,7 @@ function App() {
             </RequireAuth>
           }
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
