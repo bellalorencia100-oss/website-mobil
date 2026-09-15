@@ -107,11 +107,24 @@ const KelolaKategori = () => {
 
   return (
     <div className="w-full">
+      <div className="mb-4 md:hidden">
+        <h1 className="text-xl font-extrabold text-gray-900">
+          Kelola Kategori
+        </h1>
+        <p className="text-xs text-gray-500 mt-0.5">
+          {dataKategori.length} kategori terdaftar
+        </p>
+      </div>
+
       <button
-        onClick={() =>
-          document.getElementById("modal_tambah_kategori").showModal()
-        }
-        className="btn bg-red-700 text-white hover:bg-red-800"
+        onClick={() => {
+          setNama("");
+          setIcon(null);
+          setEditId(null);
+          document.getElementById("modal_tambah_kategori").showModal();
+        }}
+        className="btn bg-red-700 text-white hover:bg-red-800 w-full md:w-auto"
+        id="btn-tambah-kategori"
       >
         + Tambah Kategori
       </button>
@@ -121,48 +134,88 @@ const KelolaKategori = () => {
           <span className="loading loading-spinner loading-lg"></span>
         </div>
       ) : (
-        <table className="w-full border-b">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="p-3">Icon</th>
-              <th className="p-3">Nama</th>
-              <th className="p-3">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
+        <>
+          <table className="w-full border-b hidden md:table">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="p-3">Icon</th>
+                <th className="p-3">Nama</th>
+                <th className="p-3">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataKategori.map((kategori, index) => (
+                <tr key={index} className="border-t">
+                  <td className="p-3">
+                    <img
+                      src={getImageUrl(kategori.icon)}
+                      alt={kategori.name}
+                      className="w-28 h-20 object-cover rounded"
+                    />
+                  </td>
+                  <td className="p-3">{kategori.name}</td>
+
+                  <td className="p-3">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditClick(kategori)}
+                        className="btn bg-red-700 text-white hover:bg-red-800 rounded-lg"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleHapusKategori(kategori.id)}
+                        className="btn bg-white text-red-700 border border-red-700 rounded-lg"
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="mt-4 flex flex-col gap-3 md:hidden">
             {dataKategori.map((kategori, index) => (
-              <tr key={index} className="border-t">
-                <td className="p-3">
-                  <img
-                    src={getImageUrl(kategori.icon)}
-                    alt={kategori.name}
-                    className="w-28 h-20 object-cover rounded"
-                  />
-                </td>
-                <td className="p-3">{kategori.name}</td>
-                <td className="p-3">
+              <div
+                key={index}
+                className="bg-white rounded-2xl shadow-sm p-3 flex items-center gap-3"
+              >
+                <img
+                  src={getImageUrl(kategori.icon)}
+                  alt={kategori.name}
+                  className="w-20 h-16 object-cover rounded-xl flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-gray-900 text-base truncate">
+                    {kategori.name}
+                  </p>
+                </div>
+                <div className="flex gap-2 flex-shrink-0">
                   <button
                     onClick={() => handleEditClick(kategori)}
-                    className="btn btn-sm bg-red-700 text-white hover:bg-red-800 mr-2"
+                    className="btn btn-sm bg-red-700 text-white hover:bg-red-800 rounded-lg"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleHapusKategori(kategori.id)}
-                    className="btn btn-sm bg-white text-red-700 border border-red-700"
+                    className="btn btn-sm bg-white text-red-700 border border-red-700 rounded-lg"
                   >
                     Hapus
                   </button>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </>
       )}
+
       <dialog id="modal_tambah_kategori" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg text-red-700 mb-1">
-            Tambah Kategori
+            {editId ? "Edit Kategori" : "Tambah Kategori"}
           </h3>
           {isSubmitting ? (
             <div className="flex justify-center items-center h-40 bg-black/10 rounded-lg">

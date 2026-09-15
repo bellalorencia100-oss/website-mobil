@@ -224,6 +224,12 @@ const KelolaMobil = () => {
 
   return (
     <div className="w-full">
+      <div className="mb-4 md:hidden">
+        <h1 className="text-xl font-extrabold text-gray-900">Kelola Mobil</h1>
+        <p className="text-xs text-gray-500 mt-0.5">
+          {dataMobil.length} mobil terdaftar
+        </p>
+      </div>
       <button
         onClick={() => {
           setNama("");
@@ -244,7 +250,8 @@ const KelolaMobil = () => {
           setEditId(null);
           document.getElementById("modal_tambah_mobil").showModal();
         }}
-        className="btn bg-red-700 text-white hover:bg-red-800"
+        className="btn bg-red-700 text-white hover:bg-red-800 w-full md:w-auto"
+        id="btn-tambah-mobil"
       >
         + Tambah Mobil Baru
       </button>
@@ -254,282 +261,352 @@ const KelolaMobil = () => {
           <span className="loading loading-spinner loading-lg"></span>
         </div>
       ) : (
-        <table className="w-full border-b">
-          <thead>
-            <tr className="bg-gray-100 text-left text-sm">
-              <th className="p-3">Foto</th>
-              <th className="p-3">Nama</th>
-              <th className="p-3">Tahun</th>
-              <th className="p-3">Harga</th>
-              <th className="p-3">Stok</th>
-              <th className="p-3">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataMobil.map((mobil, index) => (
-              <tr key={index} className="border-t">
-                <td className="p-3">
-                  <div className="relative w-28 h-20">
-                    <img
-                      src={mobil.images?.[0]}
-                      alt={mobil.nama}
-                      className="w-28 h-20 object-cover rounded"
-                    />
-                    {mobil.images && mobil.images.length > 1 && (
-                      <span className="absolute bottom-1 right-1 bg-black/70 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-                        +{mobil.images.length - 1}
-                      </span>
-                    )}
-                  </div>
-                </td>
+        <>
+          <table className="w-full border-b hidden md:table">
+            <thead>
+              <tr className="bg-gray-100 text-left text-sm">
+                <th className="p-3">Foto</th>
+                <th className="p-3">Nama</th>
+                <th className="p-3">Tahun</th>
+                <th className="p-3">Harga</th>
+                <th className="p-3">Stok</th>
+                <th className="p-3">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataMobil.map((mobil, index) => (
+                <tr key={index} className="border-t">
+                  <td className="p-3">
+                    <div className="relative w-28 h-20">
+                      <img
+                        src={mobil.images?.[0]}
+                        alt={mobil.nama}
+                        className="w-28 h-20 object-cover rounded"
+                      />
+                      {mobil.images && mobil.images.length > 1 && (
+                        <span className="absolute bottom-1 right-1 bg-black/70 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+                          +{mobil.images.length - 1}
+                        </span>
+                      )}
+                    </div>
+                  </td>
 
-                <td className="p-3">{mobil.nama}</td>
-                <td className="p-3">{mobil.tahun}</td>
-                <td className="p-3">
-                  Rp {mobil.harga.toLocaleString("id-ID")}
-                </td>
-                <td className="p-3">{mobil.stok}</td>
-                <td className="p-3">
+                  <td className="p-3">{mobil.nama}</td>
+                  <td className="p-3">{mobil.tahun}</td>
+                  <td className="p-3">
+                    Rp {mobil.harga.toLocaleString("id-ID")}
+                  </td>
+                  <td className="p-3">{mobil.stok}</td>
+                  <td className="p-3">
+                    <button
+                      className="btn btn-sm bg-red-700 text-white hover:bg-red-800 mr-2"
+                      onClick={() => handleEditClick(mobil)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-sm bg-white text-red-700 border border-red-700"
+                      onClick={() => handleHapusMobil(mobil.id)}
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="mt-4 flex flex-col gap-3 md:hidden">
+            {dataMobil.map((mobil, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl shadow-sm p-3 flex items-center gap-3"
+              >
+                <div className="relative w-20 h-16 flex-shrink-0">
+                  <img
+                    src={mobil.images?.[0]}
+                    alt={mobil.nama}
+                    className="w-20 h-16 object-cover rounded-xl"
+                  />
+                  {mobil.images && mobil.images.length > 1 && (
+                    <span className="absolute bottom-1 right-1 bg-black/70 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                      +{mobil.images.length - 1}
+                    </span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-gray-900 text-sm truncate">
+                    {mobil.nama}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {mobil.tahun} &middot; Stok {mobil.stok}
+                  </p>
+                  <p className="text-base font-extrabold text-red-700 mt-1">
+                    Rp {mobil.harga.toLocaleString("id-ID")}
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 flex-shrink-0">
                   <button
-                    className="btn btn-sm bg-red-700 text-white hover:bg-red-800 mr-2"
+                    className="btn btn-sm bg-red-700 text-white hover:bg-red-800 rounded-lg"
                     onClick={() => handleEditClick(mobil)}
                   >
                     Edit
                   </button>
                   <button
-                    className="btn btn-sm bg-white text-red-700 border border-red-700"
+                    className="btn btn-sm bg-white text-red-700 border border-red-700 rounded-lg"
                     onClick={() => handleHapusMobil(mobil.id)}
                   >
                     Hapus
                   </button>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </>
       )}
+
       <dialog id="modal_tambah_mobil" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg text-red-700">
-            {editId ? "Edit Mobil" : "Tambah Mobil Baru"}
-          </h3>
+        <div className="modal-box w-full h-full max-w-full max-h-full rounded-none p-0 flex flex-col md:w-11/12 md:h-auto md:max-w-lg md:max-h-[90vh] md:rounded-2xl">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 flex-shrink-0">
+            <h3 className="font-bold text-lg text-red-700">
+              {editId ? "Edit Mobil" : "Tambah Mobil Baru"}
+            </h3>
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById("modal_tambah_mobil").close()
+              }
+              className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-lg md:hidden"
+              aria-label="Tutup"
+            >
+              &times;
+            </button>
+          </div>
+
           {isSubmitting ? (
-            <div className="flex justify-center items-center h-40 bg-black/10 rounded-lg">
+            <div className="flex-1 flex justify-center items-center bg-black/10">
               <span className="loading loading-spinner loading-lg"></span>
             </div>
           ) : (
-            <form onSubmit={handleTambahMobil}>
-              <label>Nama Mobil</label>
-              <input
-                type="text"
-                placeholder="Nama Mobil"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={nama}
-                onChange={(e) => setNama(e.target.value)}
-              />
+            <form
+              onSubmit={handleTambahMobil}
+              className="flex-1 flex flex-col min-h-0"
+            >
+              <div className="flex-1 overflow-y-auto px-4 py-3">
+                <label>Nama Mobil</label>
+                <input
+                  type="text"
+                  placeholder="Nama Mobil"
+                  className="input input-bordered w-full mt-2 text-gray-400"
+                  value={nama}
+                  onChange={(e) => setNama(e.target.value)}
+                />
 
-              <label className="block mt-1">Deskripsi</label>
-              <input
-                type="text"
-                placeholder="Deskripsi"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={deskripsi}
-                onChange={(e) => setDeskripsi(e.target.value)}
-              />
+                <label className="block mt-1">Deskripsi</label>
+                <input
+                  type="text"
+                  placeholder="Deskripsi"
+                  className="input input-bordered w-full mt-2 text-gray-400"
+                  value={deskripsi}
+                  onChange={(e) => setDeskripsi(e.target.value)}
+                />
 
-              <label className="block mt-1">Tahun</label>
-              <input
-                type="number"
-                placeholder="Tahun"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={tahun}
-                onChange={(e) => setTahun(e.target.value)}
-              />
+                <label className="block mt-1">Tahun</label>
+                <input
+                  type="number"
+                  placeholder="Tahun"
+                  className="input input-bordered w-full mt-2 text-gray-400"
+                  value={tahun}
+                  onChange={(e) => setTahun(e.target.value)}
+                />
 
-              <label className="block mt-1">Harga</label>
-              <input
-                type="number"
-                placeholder="Harga"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={harga}
-                onChange={(e) => setHarga(e.target.value)}
-              />
+                <label className="block mt-1">Harga</label>
+                <input
+                  type="number"
+                  placeholder="Harga"
+                  className="input input-bordered w-full mt-2 text-gray-400"
+                  value={harga}
+                  onChange={(e) => setHarga(e.target.value)}
+                />
 
-              <label className="block mt-1">Stok</label>
-              <input
-                type="number"
-                placeholder="Stok"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={stok}
-                onChange={(e) => setStok(e.target.value)}
-              />
+                <label className="block mt-1">Stok</label>
+                <input
+                  type="number"
+                  placeholder="Stok"
+                  className="input input-bordered w-full mt-2 text-gray-400"
+                  value={stok}
+                  onChange={(e) => setStok(e.target.value)}
+                />
 
-              <label className="block mt-1">Kilometer</label>
-              <input
-                type="number"
-                placeholder="Kilometer (contoh: 35000)"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={kilometer}
-                onChange={(e) => setKilometer(e.target.value)}
-              />
+                <label className="block mt-1">Kilometer</label>
+                <input
+                  type="number"
+                  placeholder="Kilometer (contoh: 35000)"
+                  className="input input-bordered w-full mt-2 text-gray-400"
+                  value={kilometer}
+                  onChange={(e) => setKilometer(e.target.value)}
+                />
 
-              <label className="block mt-1">Kapasitas Mesin (cc)</label>
-              <input
-                type="number"
-                placeholder="Kapasitas Mesin (contoh: 1500)"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={kapasitasMesin}
-                onChange={(e) => setKapasitasMesin(e.target.value)}
-              />
+                <label className="block mt-1">Kapasitas Mesin (cc)</label>
+                <input
+                  type="number"
+                  placeholder="Kapasitas Mesin (contoh: 1500)"
+                  className="input input-bordered w-full mt-2 text-gray-400"
+                  value={kapasitasMesin}
+                  onChange={(e) => setKapasitasMesin(e.target.value)}
+                />
 
-              <label className="block mt-1">Warna</label>
-              <input
-                type="text"
-                placeholder="Warna (contoh: Putih)"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={warna}
-                onChange={(e) => setWarna(e.target.value)}
-              />
+                <label className="block mt-1">Warna</label>
+                <input
+                  type="text"
+                  placeholder="Warna (contoh: Putih)"
+                  className="input input-bordered w-full mt-2 text-gray-400"
+                  value={warna}
+                  onChange={(e) => setWarna(e.target.value)}
+                />
 
-              <select
-                className="select select-bordered w-full mt-3"
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-              >
-                <option value="">Pilih Kategori</option>
-                {dataKategori.map((kategori, index) => (
-                  <option key={index} value={kategori.id}>
-                    {kategori.name}
-                  </option>
-                ))}
-              </select>
+                <select
+                  className="select select-bordered w-full mt-3"
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(e.target.value)}
+                >
+                  <option value="">Pilih Kategori</option>
+                  {dataKategori.map((kategori, index) => (
+                    <option key={index} value={kategori.id}>
+                      {kategori.name}
+                    </option>
+                  ))}
+                </select>
 
-              <select
-                className="select select-bordered w-full mt-3"
-                value={merek}
-                onChange={(e) => setMerek(e.target.value)}
-              >
-                <option value="">Pilih Merek</option>
-                <option value="Byd">Byd</option>
-                <option value="Honda">Honda</option>
-                <option value="Mercedes Benz">Mercedes Benz</option>
-                <option value="Hyundai">Hyundai</option>
-                <option value="Toyota">Toyota</option>
-                <option value="Mitsubishi">Mitsubishi</option>
-                <option value="Chevrolet">Chevrolet</option>
-                <option value="Suzuki">Suzuki</option>
-                <option value="Nissan">Nissan</option>
-                <option value="Isuzu">Isuzu</option>
-                <option value="Mazda">Mazda</option>
-                <option value="Dfsk">Dfsk</option>
-                <option value="Ford">Ford</option>
-                <option value="MG">MG</option>
-                <option value="Jeep">Jeep</option>
-                <option value="Volkswagen">Volkswagen</option>
-                <option value="Bmw">Bmw</option>
-                <option value="Mini">Mini</option>
-                <option value="Kia">Kia</option>
-                <option value="Lexus">Lexus</option>
-                <option value="Wuling">Wuling</option>
-                <option value="Cherry">Cherry</option>
-                <option value="Gwm">Gwm</option>
-                <option value="Baic">Baic</option>
-              </select>
+                <select
+                  className="select select-bordered w-full mt-3"
+                  value={merek}
+                  onChange={(e) => setMerek(e.target.value)}
+                >
+                  <option value="">Pilih Merek</option>
+                  <option value="Byd">Byd</option>
+                  <option value="Honda">Honda</option>
+                  <option value="Mercedes Benz">Mercedes Benz</option>
+                  <option value="Hyundai">Hyundai</option>
+                  <option value="Toyota">Toyota</option>
+                  <option value="Mitsubishi">Mitsubishi</option>
+                  <option value="Chevrolet">Chevrolet</option>
+                  <option value="Suzuki">Suzuki</option>
+                  <option value="Nissan">Nissan</option>
+                  <option value="Isuzu">Isuzu</option>
+                  <option value="Mazda">Mazda</option>
+                  <option value="Dfsk">Dfsk</option>
+                  <option value="Ford">Ford</option>
+                  <option value="MG">MG</option>
+                  <option value="Jeep">Jeep</option>
+                  <option value="Volkswagen">Volkswagen</option>
+                  <option value="Bmw">Bmw</option>
+                  <option value="Mini">Mini</option>
+                  <option value="Kia">Kia</option>
+                  <option value="Lexus">Lexus</option>
+                  <option value="Wuling">Wuling</option>
+                  <option value="Cherry">Cherry</option>
+                  <option value="Gwm">Gwm</option>
+                  <option value="Baic">Baic</option>
+                </select>
 
-              <select
-                className="select select-bordered w-full mt-3"
-                value={transmisi}
-                onChange={(e) => setTransmisi(e.target.value)}
-              >
-                <option value="">Pilih Transmisi</option>
-                <option value="Manual">Manual</option>
-                <option value="Automatic">Automatic</option>
-              </select>
+                <select
+                  className="select select-bordered w-full mt-3"
+                  value={transmisi}
+                  onChange={(e) => setTransmisi(e.target.value)}
+                >
+                  <option value="">Pilih Transmisi</option>
+                  <option value="Manual">Manual</option>
+                  <option value="Automatic">Automatic</option>
+                </select>
 
-              <select
-                className="select select-bordered w-full mt-3"
-                value={bahanBakar}
-                onChange={(e) => setBahanBakar(e.target.value)}
-              >
-                <option value="">Pilih Bahan Bakar</option>
-                <option value="Bensin">Bensin</option>
-                <option value="Solar">Solar</option>
-                <option value="Hybrid">Hybrid</option>
-                <option value="Listrik">Listrik</option>
-              </select>
+                <select
+                  className="select select-bordered w-full mt-3"
+                  value={bahanBakar}
+                  onChange={(e) => setBahanBakar(e.target.value)}
+                >
+                  <option value="">Pilih Bahan Bakar</option>
+                  <option value="Bensin">Bensin</option>
+                  <option value="Solar">Solar</option>
+                  <option value="Hybrid">Hybrid</option>
+                  <option value="Listrik">Listrik</option>
+                </select>
 
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                className="file-input file-input-bordered w-full mt-3"
-                onChange={handlePilihFoto}
-              />
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  className="file-input file-input-bordered w-full mt-3"
+                  onChange={handlePilihFoto}
+                />
 
-              {editId && fotoLama.length > 0 && images.length === 0 && (
-                <div className="mt-2">
-                  <p className="text-xs text-gray-500 mb-1">
-                    Foto saat ini (akan tetap dipakai jika tidak pilih foto
-                    baru):
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {fotoLama.map((url, index) => (
-                      <img
-                        key={index}
-                        src={url}
-                        alt={`foto-lama-${index}`}
-                        className="w-16 h-16 object-cover rounded border"
-                      />
-                    ))}
+                {editId && fotoLama.length > 0 && images.length === 0 && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500 mb-1">
+                      Foto saat ini (akan tetap dipakai jika tidak pilih foto
+                      baru):
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {fotoLama.map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          alt={`foto-lama-${index}`}
+                          className="w-16 h-16 object-cover rounded border"
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {images.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {images.map((file, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt={`preview-${index}`}
-                        className={`w-16 h-16 object-cover rounded border ${
-                          index === 0 ? "ring-2 ring-red-700" : ""
-                        }`}
-                      />
-                      {index === 0 ? (
-                        <>
-                          <span className="absolute -top-1 -left-1 bg-red-700 text-white text-[9px] font-bold px-1.5 rounded">
-                            Utama
-                          </span>
+                {images.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {images.map((file, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={`preview-${index}`}
+                          className={`w-16 h-16 object-cover rounded border ${
+                            index === 0 ? "ring-2 ring-red-700" : ""
+                          }`}
+                        />
+                        {index === 0 ? (
+                          <>
+                            <span className="absolute -top-1 -left-1 bg-red-700 text-white text-[9px] font-bold px-1.5 rounded">
+                              Utama
+                            </span>
+                            <button
+                              type="button"
+                              onClick={bukaCropUtama}
+                              className="absolute -bottom-1 left-0 right-0 bg-white border border-gray-300 text-[8px] font-bold px-1 rounded text-center"
+                            >
+                              Atur Frame
+                            </button>
+                          </>
+                        ) : (
                           <button
                             type="button"
-                            onClick={bukaCropUtama}
+                            onClick={() => handleJadikanUtama(index)}
                             className="absolute -bottom-1 left-0 right-0 bg-white border border-gray-300 text-[8px] font-bold px-1 rounded text-center"
                           >
-                            Atur Frame
+                            Jadikan Utama
                           </button>
-                        </>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => handleJadikanUtama(index)}
-                          className="absolute -bottom-1 left-0 right-0 bg-white border border-gray-300 text-[8px] font-bold px-1 rounded text-center"
-                        >
-                          Jadikan Utama
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-              <button className="btn bg-red-700 text-white hover:bg-red-800 mt-3">
-                Submit
-              </button>
+              <div className="px-4 py-3 border-t border-gray-200 flex-shrink-0">
+                <button className="btn bg-red-700 text-white hover:bg-red-800 w-full md:w-auto">
+                  Submit
+                </button>
+              </div>
             </form>
           )}
 
-          <div className="modal-action">
+          <div className="modal-action px-4 pb-4 flex-shrink-0">
             <form method="dialog">
               <button className="btn">Tutup</button>
             </form>

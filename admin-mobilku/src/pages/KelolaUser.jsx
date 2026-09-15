@@ -151,6 +151,12 @@ const KelolaUser = () => {
 
   return (
     <div className="w-full">
+      <div className="mb-4 md:hidden">
+        <h1 className="text-xl font-extrabold text-gray-900">Kelola User</h1>
+        <p className="text-xs text-gray-500 mt-0.5">
+          {dataUser.length} user terdaftar
+        </p>
+      </div>
       <button
         onClick={() => {
           setUsername("");
@@ -161,7 +167,8 @@ const KelolaUser = () => {
           setEditId(null);
           document.getElementById("modal_tambah_user").showModal();
         }}
-        className="btn bg-red-700 text-white hover:bg-red-800"
+        className="btn bg-red-700 text-white hover:bg-red-800 w-full md:w-auto"
+        id="btn-tambah-user"
       >
         + Tambah User
       </button>
@@ -171,45 +178,93 @@ const KelolaUser = () => {
           <span className="loading loading-spinner loading-lg"></span>
         </div>
       ) : (
-        <table className="w-full border-b">
-          <thead>
-            <tr className="bg-gray-100 text-left text-sm">
-              <th className="p-3">Username</th>
-              <th className="p-3">Email</th>
-              <th className="p-3">Nama Lengkap</th>
-              <th className="p-3">Role</th>
-              <th className="p-3">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
+        <>
+          <table className="w-full border-b hidden md:table">
+            <thead>
+              <tr className="bg-gray-100 text-left text-sm">
+                <th className="p-3">Username</th>
+                <th className="p-3">Email</th>
+                <th className="p-3">Nama Lengkap</th>
+                <th className="p-3">Role</th>
+                <th className="p-3">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataUser.map((user, index) => (
+                <tr key={index} className="border-t">
+                  <td className="p-3">{user.username}</td>
+                  <td className="p-3">{user.email}</td>
+                  <td className="p-3">{user.fullName}</td>
+                  <td className="p-3">{user.role}</td>
+                  <td className="p-3">
+                    <button
+                      onClick={() => handleEditClick(user)}
+                      className="btn btn-sm bg-red-700 text-white hover:bg-red-800 mr-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleHapusUser(user.id)}
+                      className="btn btn-sm bg-white text-red-700 border border-red-700"
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="mt-4 flex flex-col gap-3 md:hidden">
             {dataUser.map((user, index) => (
-              <tr key={index} className="border-t">
-                <td className="p-3">{user.username}</td>
-                <td className="p-3">{user.email}</td>
-                <td className="p-3">{user.fullName}</td>
-                <td className="p-3">{user.role}</td>
-                <td className="p-3">
+              <div key={index} className="bg-white rounded-2xl shadow-sm p-3.5">
+                <div className="flex items-start justify-between gap-2.5">
+                  <div className="min-w-0">
+                    <p className="font-extrabold text-gray-900 text-[15px] truncate">
+                      {user.fullName}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      @{user.username}
+                    </p>
+                  </div>
+                  <span
+                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase flex-shrink-0 ${
+                      user.role === "admin"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-indigo-100 text-indigo-700"
+                    }`}
+                  >
+                    {user.role}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mt-2 truncate">
+                  {user.email}
+                </p>
+                <div className="flex gap-2 mt-3">
                   <button
                     onClick={() => handleEditClick(user)}
-                    className="btn btn-sm bg-red-700 text-white hover:bg-red-800 mr-2"
+                    className="btn btn-sm bg-red-700 text-white hover:bg-red-800 rounded-lg"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleHapusUser(user.id)}
-                    className="btn btn-sm bg-white text-red-700 border border-red-700"
+                    className="btn btn-sm bg-white text-red-700 border border-red-700 rounded-lg"
                   >
                     Hapus
                   </button>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </>
       )}
+
       <dialog id="modal_tambah_user" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Tambah User</h3>
+          <h3 className="font-bold text-lg">
+            {editId ? "Edit User" : "Tambah User"}
+          </h3>
 
           {isSubmitting ? (
             <div className="flex justify-center items-center h-40">
