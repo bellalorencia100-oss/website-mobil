@@ -102,7 +102,7 @@ function DaftarModal({ setLoggedIn }) {
 
   return (
     <dialog id="my_modal_2" className="modal">
-      <div className="modal-box">
+      <div className="modal-box w-[92%] max-w-md max-h-[85vh] rounded-2xl overflow-y-auto md:w-11/12 md:max-w-lg md:max-h-[90vh] md:rounded-2xl">
         <h3 className="font-bold text-sm text-gray-500">Daftar</h3>
         <p className="py-2 text-sm text-gray-500">
           Daftar sekarang dan mulai jual beli mobil bersama MobilKu

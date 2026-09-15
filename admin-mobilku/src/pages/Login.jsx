@@ -50,7 +50,7 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-6 overflow-hidden bg-white">
+    <div className="relative min-h-screen flex items-center justify-center p-4 md:p-6 overflow-hidden bg-white">
       {isSubmitting && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <span className="loading loading-spinner loading-lg text-white"></span>
@@ -61,7 +61,7 @@ const Login = () => {
         style={{ clipPath: "ellipse(75% 100% at 50% 0%)" }}
       />
 
-      <div className="relative z-10 w-full max-w-sm bg-white rounded-2xl shadow-2xl px-9 pb-9">
+      <div className="relative z-10 w-full max-w-sm bg-white rounded-2xl shadow-2xl px-6 pb-6 md:px-9 md:pb-9">
         <div className="text-center">
           <div className="w-[68px] h-[68px] rounded-full bg-red-700 flex items-center justify-center mx-auto -mt-[34px] mb-4 shadow-lg border-4 border-white">
             <svg
