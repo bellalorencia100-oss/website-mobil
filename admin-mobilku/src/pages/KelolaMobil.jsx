@@ -366,7 +366,7 @@ const KelolaMobil = () => {
       )}
 
       <dialog id="modal_tambah_mobil" className="modal">
-        <div className="modal-box w-full h-full max-w-full max-h-full rounded-none p-0 flex flex-col md:w-11/12 md:h-auto md:max-w-lg md:max-h-[90vh] md:rounded-2xl">
+        <div className="modal-box w-[92%] max-w-md max-h-[85vh] rounded-2xl p-0 flex flex-col md:w-11/12 md:max-w-lg md:max-h-[90vh] md:rounded-2xl">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 flex-shrink-0">
             <h3 className="font-bold text-lg text-red-700">
               {editId ? "Edit Mobil" : "Tambah Mobil Baru"}

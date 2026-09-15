@@ -7,7 +7,9 @@ import BottomNav from "../components/BottomNav.jsx";
 const Admin = () => {
   const navigate = useNavigate();
   const [menuTerbuka, setMenuTerbuka] = useState(false);
+  const [menuLoading, setMenuLoading] = useState(false);
   const [dropdownAkunTerbuka, setDropdownAkunTerbuka] = useState(false);
+  const [akunLoading, setAkunLoading] = useState(false);
   const [profilModalTerbuka, setProfilModalTerbuka] = useState(false);
   const [passwordModalTerbuka, setPasswordModalTerbuka] = useState(false);
   const handleLogout = () => {
@@ -15,16 +17,28 @@ const Admin = () => {
     localStorage.removeItem("user");
     navigate("/");
   };
+  const jalankanAksiAkun = (aksi) => {
+    setDropdownAkunTerbuka(false);
+    setAkunLoading(true);
+    setTimeout(() => {
+      setAkunLoading(false);
+      aksi();
+    }, 400);
+  };
+
   const tutupMenu = () => setMenuTerbuka(false);
+  const bukaMenu = () => {
+    setMenuLoading(true);
+    setTimeout(() => {
+      setMenuLoading(false);
+      setMenuTerbuka(true);
+    }, 400);
+  };
   return (
     <div className="flex min-h-screen">
       <div className="md:hidden fixed top-0 left-0 right-0 z-30 bg-red-700 text-white flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setMenuTerbuka(true)}
-            className="p-1"
-            aria-label="Buka menu"
-          >
+          <button onClick={bukaMenu} className="p-1" aria-label="Buka menu">
             <svg
               width="24"
               height="24"
@@ -77,19 +91,17 @@ const Admin = () => {
               />
               <div className="absolute right-0 top-11 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-50">
                 <button
-                  onClick={() => {
-                    setDropdownAkunTerbuka(false);
-                    setProfilModalTerbuka(true);
-                  }}
+                  onClick={() =>
+                    jalankanAksiAkun(() => setProfilModalTerbuka(true))
+                  }
                   className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                 >
                   Profil Saya
                 </button>
                 <button
-                  onClick={() => {
-                    setDropdownAkunTerbuka(false);
-                    setPasswordModalTerbuka(true);
-                  }}
+                  onClick={() =>
+                    jalankanAksiAkun(() => setPasswordModalTerbuka(true))
+                  }
                   className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                 >
                   Pengaturan Akun
@@ -97,7 +109,7 @@ const Admin = () => {
 
                 <div className="border-t border-gray-200 my-1" />
                 <button
-                  onClick={handleLogout}
+                  onClick={() => jalankanAksiAkun(handleLogout)}
                   className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                 >
                   Keluar
@@ -107,6 +119,12 @@ const Admin = () => {
           )}
         </div>
       </div>
+
+      {menuLoading && (
+        <div className="md:hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
 
       {menuTerbuka && (
         <div
@@ -191,9 +209,16 @@ const Admin = () => {
         <Outlet />
       </div>
 
+      {akunLoading && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
+
       {profilModalTerbuka && (
         <ProfilModal onClose={() => setProfilModalTerbuka(false)} />
       )}
+
       {passwordModalTerbuka && (
         <GantiPasswordModal onClose={() => setPasswordModalTerbuka(false)} />
       )}
