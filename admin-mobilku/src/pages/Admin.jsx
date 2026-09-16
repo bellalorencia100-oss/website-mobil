@@ -41,7 +41,7 @@ const Admin = () => {
     }, 400);
   };
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen overflow-x-hidden">
       <div className="md:hidden fixed top-0 left-0 right-0 z-30 bg-red-700 text-white flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <button onClick={bukaMenu} className="p-1" aria-label="Buka menu">
