@@ -104,6 +104,20 @@ function DetailMobil() {
     setselectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
+  const cekLoginSebelumAksi = (e) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      e.preventDefault();
+      if (
+        window.confirm(
+          "Silakan daftar atau login terlebih dahulu untuk melanjutkan.",
+        )
+      ) {
+        document.getElementById("my_modal_2").showModal();
+      }
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -324,6 +338,7 @@ function DetailMobil() {
                 href={`https://wa.me/${Nomor_whatsap}?text=${pesanTanya}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={cekLoginSebelumAksi}
                 className="flex-1 flex flex-col items-center justify-center gap-0.5 border border-green-600 text-green-700 font-bold text-sm rounded-xl py-2.5"
               >
                 <span className="flex items-center gap-1.5">Chat WhatsApp</span>
@@ -335,6 +350,7 @@ function DetailMobil() {
                 href={`https://wa.me/${Nomor_whatsap}?text=${pesanBeli}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={cekLoginSebelumAksi}
                 className="flex-1 flex flex-col items-center justify-center gap-0.5 bg-red-700 hover:bg-red-800 text-white font-bold text-sm rounded-xl py-2.5 transition"
               >
                 <span>Beli Sekarang</span>

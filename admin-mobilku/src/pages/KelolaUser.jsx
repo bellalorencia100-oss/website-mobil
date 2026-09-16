@@ -314,13 +314,15 @@ const KelolaUser = () => {
             />
 
             <label className="block mt-1">Role</label>
-            <input
-              type="text"
-              placeholder="Role"
-              className="input input-bordered w-full mt-2 text-gray-400"
+            <select
+              className="select select-bordered w-full mt-2"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-            />
+            >
+              <option value="">Pilih Role</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
 
             {!editId && (
               <div>
