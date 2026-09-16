@@ -587,35 +587,38 @@ const KelolaMobil = () => {
                     </div>
                   </div>
                 )}
+
                 {images.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="flex flex-wrap gap-3 mt-2">
                     {images.map((file, index) => (
-                      <div key={index} className="relative">
-                        <img
-                          src={previewUrls[index]}
-                          alt={`preview-${index}`}
-                          className={`w-16 h-16 object-cover rounded border ${
-                            index === 0 ? "ring-2 ring-red-700" : ""
-                          }`}
-                        />
-                        {index === 0 ? (
-                          <>
+                      <div key={index} className="w-20">
+                        <div className="relative">
+                          <img
+                            src={previewUrls[index]}
+                            alt={`preview-${index}`}
+                            className={`w-20 h-20 object-cover rounded border ${
+                              index === 0 ? "ring-2 ring-red-700" : ""
+                            }`}
+                          />
+                          {index === 0 && (
                             <span className="absolute -top-1 -left-1 bg-red-700 text-white text-[9px] font-bold px-1.5 rounded">
                               Utama
                             </span>
-                            <button
-                              type="button"
-                              onClick={bukaCropUtama}
-                              className="absolute -bottom-1 left-0 right-0 bg-white border border-gray-300 text-[8px] font-bold px-1 rounded text-center"
-                            >
-                              Atur Frame
-                            </button>
-                          </>
+                          )}
+                        </div>
+                        {index === 0 ? (
+                          <button
+                            type="button"
+                            onClick={bukaCropUtama}
+                            className="mt-1 w-full bg-white border border-gray-300 text-[10px] font-bold py-1.5 rounded text-center"
+                          >
+                            Atur Frame
+                          </button>
                         ) : (
                           <button
                             type="button"
                             onClick={() => handleJadikanUtama(index)}
-                            className="absolute -bottom-1 left-0 right-0 bg-white border border-gray-300 text-[8px] font-bold px-1 rounded text-center"
+                            className="mt-1 w-full bg-white border border-gray-300 text-[10px] font-bold py-1.5 rounded text-center"
                           >
                             Jadikan Utama
                           </button>
