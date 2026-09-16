@@ -14,6 +14,7 @@ const Admin = () => {
   const [profilModalTerbuka, setProfilModalTerbuka] = useState(false);
   const [passwordModalTerbuka, setPasswordModalTerbuka] = useState(false);
   const [debugOverflow, setDebugOverflow] = useState([]);
+  const [jejakOverflow, setJejakOverflow] = useState([]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -33,7 +34,33 @@ const Admin = () => {
           );
         }
       });
+
       setDebugOverflow(hasil.slice(0, 10));
+
+      const konten = document.querySelector(".flex-1.p-8");
+      let node = konten;
+      const jejak = [];
+      while (node && node.children && node.children.length) {
+        let anakTerlebar = null;
+        let lebarTerbesar = 0;
+        for (const anak of node.children) {
+          if (anak.scrollWidth > lebarTerbesar) {
+            lebarTerbesar = anak.scrollWidth;
+            anakTerlebar = anak;
+          }
+        }
+        if (!anakTerlebar || lebarTerbesar <= lebarLayar + 2) break;
+        anakTerlebar.style.outline = "3px solid blue";
+        jejak.push(
+          `${anakTerlebar.tagName.toLowerCase()}.${(
+            anakTerlebar.className || ""
+          )
+            .toString()
+            .slice(0, 50)} (${lebarTerbesar}px)`,
+        );
+        node = anakTerlebar;
+      }
+      setJejakOverflow(jejak);
     }, 800);
     return () => clearTimeout(timer);
   }, [location.pathname]);
@@ -249,9 +276,10 @@ const Admin = () => {
         <GantiPasswordModal onClose={() => setPasswordModalTerbuka(false)} />
       )}
 
-      {debugOverflow.length > 0 && (
-        <div className="fixed bottom-16 md:bottom-0 left-0 right-0 z-[999] bg-yellow-300 text-black text-[10px] p-2 max-h-40 overflow-y-auto">
-          {debugOverflow.map((baris, i) => (
+      {jejakOverflow.length > 0 && (
+        <div className="fixed bottom-32 md:bottom-16 left-0 right-0 z-[999] bg-orange-300 text-black text-[10px] p-2 max-h-40 overflow-y-auto">
+          <div className="font-bold">Jejak elemen terlebar:</div>
+          {jejakOverflow.map((baris, i) => (
             <div key={i}>{baris}</div>
           ))}
         </div>
