@@ -111,11 +111,6 @@ const KelolaKategori = () => {
 
   return (
     <div className="w-full">
-      {isSubmitting && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
-          <span className="loading loading-spinner loading-lg text-white"></span>
-        </div>
-      )}
       {hapusLoading && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
           <span className="loading loading-spinner loading-lg text-white"></span>
@@ -250,13 +245,18 @@ const KelolaKategori = () => {
               Submit
             </button>
           </form>
-
           <div className="modal-action">
             <form method="dialog">
               <button className="btn">Tutup</button>
             </form>
           </div>
         </div>
+
+        {isSubmitting && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+            <span className="loading loading-spinner loading-lg text-white"></span>
+          </div>
+        )}
       </dialog>
     </div>
   );

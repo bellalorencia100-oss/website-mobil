@@ -157,11 +157,6 @@ const KelolaUser = () => {
 
   return (
     <div className="w-full">
-      {isSubmitting && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
-          <span className="loading loading-spinner loading-lg text-white"></span>
-        </div>
-      )}
       {hapusLoading && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
           <span className="loading loading-spinner loading-lg text-white"></span>
@@ -352,6 +347,12 @@ const KelolaUser = () => {
             </form>
           </div>
         </div>
+
+        {isSubmitting && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+            <span className="loading loading-spinner loading-lg text-white"></span>
+          </div>
+        )}
       </dialog>
     </div>
   );
