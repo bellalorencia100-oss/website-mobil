@@ -10,7 +10,6 @@ export function getCroppedImg(
 ) {
   return new Promise((resolve, reject) => {
     const image = new Image();
-    image.crossOrigin = "anonymous";
     image.src = imageSrc;
 
     image.onload = () => {
