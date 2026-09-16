@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const KelolaUser = () => {
   const [dataUser, setDataUser] = useState([]);
@@ -8,6 +9,7 @@ const KelolaUser = () => {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [editId, setEditId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -311,15 +313,25 @@ const KelolaUser = () => {
               {!editId && (
                 <div>
                   <label>Password</label>
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    className="input input-bordered w-full mt-2 text-gray-400"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                  <div className="relative mt-2">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      className="input input-bordered w-full pr-10 text-gray-400"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
                 </div>
               )}
+
               <button className="btn bg-red-700 text-white hover:bg-red-800 mt-2">
                 Submit
               </button>

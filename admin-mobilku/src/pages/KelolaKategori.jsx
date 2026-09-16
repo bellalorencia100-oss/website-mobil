@@ -218,7 +218,7 @@ const KelolaKategori = () => {
             {editId ? "Edit Kategori" : "Tambah Kategori"}
           </h3>
           {isSubmitting ? (
-            <div className="flex justify-center items-center h-40 bg-black/10 rounded-lg">
+            <div className="flex justify-center items-center h-40 rounded-lg">
               <span className="loading loading-spinner loading-lg"></span>
             </div>
           ) : (
