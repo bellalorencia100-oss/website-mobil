@@ -34,7 +34,6 @@ const KelolaMobil = () => {
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [cropIndex, setCropIndex] = useState(null);
   const [cropImageSrc, setCropImageSrc] = useState(null);
-  const [debugMsg, setDebugMsg] = useState("(belum ada aksi)");
 
   useEffect(() => {
     axios.get("/api/mobil").then((response) => {
@@ -85,23 +84,17 @@ const KelolaMobil = () => {
   };
 
   const handleJadikanUtama = (index) => {
-    setDebugMsg(`diklik, index=${index}`);
-    try {
-      const fotoUtama = images[index];
-      const sisanya = images.filter((_, i) => i !== index);
-      setImages([fotoUtama, ...sisanya]);
+    const fotoUtama = images[index];
+    const sisanya = images.filter((_, i) => i !== index);
+    setImages([fotoUtama, ...sisanya]);
 
-      const asliUtama = imagesAsli[index];
-      const asliSisanya = imagesAsli.filter((_, i) => i !== index);
-      setImagesAsli([asliUtama, ...asliSisanya]);
+    const asliUtama = imagesAsli[index];
+    const asliSisanya = imagesAsli.filter((_, i) => i !== index);
+    setImagesAsli([asliUtama, ...asliSisanya]);
 
-      setCropIndex(0);
-      setCropImageSrc(previewUrls[index]);
-      setCropModalOpen(true);
-      setDebugMsg(`sukses, index=${index}`);
-    } catch (err) {
-      setDebugMsg(`ERROR: ${err?.message || err}`);
-    }
+    setCropIndex(0);
+    setCropImageSrc(previewUrls[index]);
+    setCropModalOpen(true);
   };
 
   const bukaCropUtama = () => {
@@ -596,9 +589,6 @@ const KelolaMobil = () => {
 
                 {images.length > 0 && (
                   <div className="flex flex-wrap gap-3 mt-2">
-                    <p className="w-full text-[11px] font-bold text-blue-700 bg-yellow-100 p-2 rounded">
-                      [DEBUG] {debugMsg}
-                    </p>
                     {images.map((file, index) => (
                       <div key={index} className="w-20">
                         <div className="relative">
