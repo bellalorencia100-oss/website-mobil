@@ -83,7 +83,8 @@ const KelolaMobil = () => {
       setCropModalOpen(true);
     }
   };
-  const handleJadikanUtama = async (index) => {
+
+  const handleJadikanUtama = (index) => {
     setDebugMsg(`diklik, index=${index}`);
     try {
       const fotoUtama = images[index];
@@ -95,8 +96,7 @@ const KelolaMobil = () => {
       setImagesAsli([asliUtama, ...asliSisanya]);
 
       setCropIndex(0);
-      const dataUrl = await bacaSebagaiDataUrl(asliUtama);
-      setCropImageSrc(dataUrl);
+      setCropImageSrc(previewUrls[index]);
       setCropModalOpen(true);
       setDebugMsg(`sukses, index=${index}`);
     } catch (err) {
@@ -104,13 +104,13 @@ const KelolaMobil = () => {
     }
   };
 
-  const bukaCropUtama = async () => {
-    if (!imagesAsli[0]) return;
+  const bukaCropUtama = () => {
+    if (!previewUrls[0]) return;
     setCropIndex(0);
-    const dataUrl = await bacaSebagaiDataUrl(imagesAsli[0]);
-    setCropImageSrc(dataUrl);
+    setCropImageSrc(previewUrls[0]);
     setCropModalOpen(true);
   };
+
   const handleSimpanCrop = (fileHasilCrop) => {
     setImages((prev) =>
       prev.map((file, i) => (i === cropIndex ? fileHasilCrop : file)),
