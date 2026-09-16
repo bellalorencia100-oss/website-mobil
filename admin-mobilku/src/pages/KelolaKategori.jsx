@@ -9,6 +9,7 @@ const KelolaKategori = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hapusLoading, setHapusLoading] = useState(false);
+  const [bukaTambahLoading, setBukaTambahLoading] = useState(false);
 
   useEffect(() => {
     axios.get("/api/categories").then((response) => {
@@ -116,6 +117,11 @@ const KelolaKategori = () => {
           <span className="loading loading-spinner loading-lg text-white"></span>
         </div>
       )}
+      {bukaTambahLoading && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
       <div className="mb-4 md:hidden">
         <h1 className="text-xl font-extrabold text-gray-900">
           Kelola Kategori
@@ -127,10 +133,14 @@ const KelolaKategori = () => {
 
       <button
         onClick={() => {
-          setNama("");
-          setIcon(null);
-          setEditId(null);
-          document.getElementById("modal_tambah_kategori").showModal();
+          setBukaTambahLoading(true);
+          setTimeout(() => {
+            setNama("");
+            setIcon(null);
+            setEditId(null);
+            document.getElementById("modal_tambah_kategori").showModal();
+            setBukaTambahLoading(false);
+          }, 400);
         }}
         className="btn bg-red-700 text-white hover:bg-red-800 w-full md:w-auto"
         id="btn-tambah-kategori"

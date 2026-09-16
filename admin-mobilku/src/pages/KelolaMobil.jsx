@@ -26,6 +26,7 @@ const KelolaMobil = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hapusLoading, setHapusLoading] = useState(false);
+  const [bukaTambahLoading, setBukaTambahLoading] = useState(false);
   const [merek, setMerek] = useState("");
   const [kilometer, setKilometer] = useState("");
   const [transmisi, setTransmisi] = useState("");
@@ -262,6 +263,12 @@ const KelolaMobil = () => {
         </div>
       )}
 
+      {bukaTambahLoading && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
+
       <div className="mb-4 md:hidden">
         <h1 className="text-xl font-extrabold text-gray-900">Kelola Mobil</h1>
         <p className="text-xs text-gray-500 mt-0.5">
@@ -270,23 +277,27 @@ const KelolaMobil = () => {
       </div>
       <button
         onClick={() => {
-          setNama("");
-          setDeskripsi("");
-          setTahun("");
-          setHarga("");
-          setStok("");
-          setCategoryId("");
-          setMerek("");
-          setKilometer("");
-          setTransmisi("");
-          setBahanBakar("");
-          setKapasitasMesin("");
-          setWarna("");
-          setImages([]);
-          setImagesAsli([]);
-          setFotoLama([]);
-          setEditId(null);
-          document.getElementById("modal_tambah_mobil").showModal();
+          setBukaTambahLoading(true);
+          setTimeout(() => {
+            setNama("");
+            setDeskripsi("");
+            setTahun("");
+            setHarga("");
+            setStok("");
+            setCategoryId("");
+            setMerek("");
+            setKilometer("");
+            setTransmisi("");
+            setBahanBakar("");
+            setKapasitasMesin("");
+            setWarna("");
+            setImages([]);
+            setImagesAsli([]);
+            setFotoLama([]);
+            setEditId(null);
+            document.getElementById("modal_tambah_mobil").showModal();
+            setBukaTambahLoading(false);
+          }, 400);
         }}
         className="btn bg-red-700 text-white hover:bg-red-800 w-full md:w-auto"
         id="btn-tambah-mobil"

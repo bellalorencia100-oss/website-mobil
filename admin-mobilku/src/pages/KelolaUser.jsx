@@ -14,7 +14,7 @@ const KelolaUser = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hapusLoading, setHapusLoading] = useState(false);
-
+  const [bukaTambahLoading, setBukaTambahLoading] = useState(false);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -162,7 +162,11 @@ const KelolaUser = () => {
           <span className="loading loading-spinner loading-lg text-white"></span>
         </div>
       )}
-
+      {bukaTambahLoading && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
       <div className="mb-4 md:hidden">
         <h1 className="text-xl font-extrabold text-gray-900">Kelola User</h1>
         <p className="text-xs text-gray-500 mt-0.5">
@@ -171,13 +175,17 @@ const KelolaUser = () => {
       </div>
       <button
         onClick={() => {
-          setUsername("");
-          setEmail("");
-          setFullName("");
-          setRole("");
-          setPassword("");
-          setEditId(null);
-          document.getElementById("modal_tambah_user").showModal();
+          setBukaTambahLoading(true);
+          setTimeout(() => {
+            setUsername("");
+            setEmail("");
+            setFullName("");
+            setRole("");
+            setPassword("");
+            setEditId(null);
+            document.getElementById("modal_tambah_user").showModal();
+            setBukaTambahLoading(false);
+          }, 400);
         }}
         className="btn bg-red-700 text-white hover:bg-red-800 w-full md:w-auto"
         id="btn-tambah-user"
