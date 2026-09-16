@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "../api/axiosInstance";
 import CropModal from "./CropModal.jsx";
 
@@ -32,10 +32,23 @@ const KelolaMobil = () => {
       setDataMobil(response.data.mobil);
       setIsLoading(false);
     });
+
     axios.get("/api/categories").then((response) => {
       setDataKategori(response.data.categories);
     });
   }, []);
+
+  const previewUrls = useMemo(
+    () => images.map((file) => URL.createObjectURL(file)),
+    [images],
+  );
+
+  useEffect(() => {
+    return () => {
+      previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [previewUrls]);
+
   const token = localStorage.getItem("token");
 
   const handlePilihFoto = (e) => {
@@ -50,6 +63,7 @@ const KelolaMobil = () => {
     setImages(filesTerpilih);
     setImagesAsli(filesTerpilih);
     if (filesTerpilih.length > 0) {
+      if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
       setCropIndex(0);
       setCropImageSrc(URL.createObjectURL(filesTerpilih[0]));
       setCropModalOpen(true);
@@ -65,6 +79,7 @@ const KelolaMobil = () => {
     const asliSisanya = imagesAsli.filter((_, i) => i !== index);
     setImagesAsli([asliUtama, ...asliSisanya]);
 
+    if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
     setCropIndex(0);
     setCropImageSrc(URL.createObjectURL(asliUtama));
     setCropModalOpen(true);
@@ -72,18 +87,20 @@ const KelolaMobil = () => {
 
   const bukaCropUtama = () => {
     if (!imagesAsli[0]) return;
+    if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
     setCropIndex(0);
     setCropImageSrc(URL.createObjectURL(imagesAsli[0]));
     setCropModalOpen(true);
   };
-
   const handleSimpanCrop = (fileHasilCrop) => {
     setImages((prev) =>
       prev.map((file, i) => (i === cropIndex ? fileHasilCrop : file)),
     );
+    if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
     setCropModalOpen(false);
     setCropIndex(null);
   };
+
   const handleTambahMobil = (e) => {
     e.preventDefault();
     console.log(editId);
@@ -558,13 +575,12 @@ const KelolaMobil = () => {
                     </div>
                   </div>
                 )}
-
                 {images.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {images.map((file, index) => (
                       <div key={index} className="relative">
                         <img
-                          src={URL.createObjectURL(file)}
+                          src={previewUrls[index]}
                           alt={`preview-${index}`}
                           className={`w-16 h-16 object-cover rounded border ${
                             index === 0 ? "ring-2 ring-red-700" : ""
@@ -612,11 +628,15 @@ const KelolaMobil = () => {
             </form>
           </div>
         </div>
+
         {cropModalOpen && (
           <CropModal
             imageSrc={cropImageSrc}
             fileName={imagesAsli[cropIndex]?.name || "foto-utama.jpg"}
-            onClose={() => setCropModalOpen(false)}
+            onClose={() => {
+              if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
+              setCropModalOpen(false);
+            }}
             onSimpan={handleSimpanCrop}
           />
         )}
