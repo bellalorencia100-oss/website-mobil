@@ -258,7 +258,8 @@ const Admin = () => {
           </button>
         </div>
       </div>
-      <div className="flex-1 p-8 pt-20 pb-24 md:pt-8 md:pb-8">
+
+      <div className="flex-1 min-w-0 p-8 pt-20 pb-24 md:pt-8 md:pb-8">
         <Outlet />
       </div>
 
