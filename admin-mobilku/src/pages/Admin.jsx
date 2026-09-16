@@ -1,17 +1,23 @@
-import { Outlet, NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import ProfilModal from "../components/ProfilModal.jsx";
 import GantiPasswordModal from "../components/GantiPasswordModal.jsx";
 import BottomNav from "../components/BottomNav.jsx";
 
 const Admin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuTerbuka, setMenuTerbuka] = useState(false);
   const [menuLoading, setMenuLoading] = useState(false);
   const [dropdownAkunTerbuka, setDropdownAkunTerbuka] = useState(false);
   const [akunLoading, setAkunLoading] = useState(false);
   const [profilModalTerbuka, setProfilModalTerbuka] = useState(false);
   const [passwordModalTerbuka, setPasswordModalTerbuka] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
