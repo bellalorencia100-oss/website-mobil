@@ -606,10 +606,15 @@ const KelolaMobil = () => {
                             </span>
                           )}
                         </div>
+
                         {index === 0 ? (
                           <button
                             type="button"
                             onClick={bukaCropUtama}
+                            onTouchEnd={(e) => {
+                              e.preventDefault();
+                              bukaCropUtama();
+                            }}
                             className="mt-1 w-full bg-white border border-gray-300 text-[10px] font-bold py-1.5 rounded text-center"
                           >
                             Atur Frame
@@ -618,6 +623,10 @@ const KelolaMobil = () => {
                           <button
                             type="button"
                             onClick={() => handleJadikanUtama(index)}
+                            onTouchEnd={(e) => {
+                              e.preventDefault();
+                              handleJadikanUtama(index);
+                            }}
                             className="mt-1 w-full bg-white border border-gray-300 text-[10px] font-bold py-1.5 rounded text-center"
                           >
                             Jadikan Utama
