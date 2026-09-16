@@ -1,6 +1,14 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
 import CropModal from "./CropModal.jsx";
+
+const bacaSebagaiDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 
 const KelolaMobil = () => {
   const [dataMobil, setDataMobil] = useState([]);
@@ -38,20 +46,25 @@ const KelolaMobil = () => {
     });
   }, []);
 
-  const previewUrls = useMemo(
-    () => images.map((file) => URL.createObjectURL(file)),
-    [images],
-  );
+  const [previewUrls, setPreviewUrls] = useState([]);
 
   useEffect(() => {
+    if (images.length === 0) {
+      setPreviewUrls([]);
+      return;
+    }
+    let dibatalkan = false;
+    Promise.all(images.map(bacaSebagaiDataUrl)).then((hasil) => {
+      if (!dibatalkan) setPreviewUrls(hasil);
+    });
     return () => {
-      previewUrls.forEach((url) => URL.revokeObjectURL(url));
+      dibatalkan = true;
     };
-  }, [previewUrls]);
+  }, [images]);
 
   const token = localStorage.getItem("token");
 
-  const handlePilihFoto = (e) => {
+  const handlePilihFoto = async (e) => {
     const filesTerpilih = Array.from(e.target.files);
     if (filesTerpilih.length > 4) {
       alert("Maksimal 4 foto per mobil");
@@ -63,14 +76,14 @@ const KelolaMobil = () => {
     setImages(filesTerpilih);
     setImagesAsli(filesTerpilih);
     if (filesTerpilih.length > 0) {
-      if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
       setCropIndex(0);
-      setCropImageSrc(URL.createObjectURL(filesTerpilih[0]));
+      const dataUrl = await bacaSebagaiDataUrl(filesTerpilih[0]);
+      setCropImageSrc(dataUrl);
       setCropModalOpen(true);
     }
   };
 
-  const handleJadikanUtama = (index) => {
+  const handleJadikanUtama = async (index) => {
     const fotoUtama = images[index];
     const sisanya = images.filter((_, i) => i !== index);
     setImages([fotoUtama, ...sisanya]);
@@ -79,24 +92,23 @@ const KelolaMobil = () => {
     const asliSisanya = imagesAsli.filter((_, i) => i !== index);
     setImagesAsli([asliUtama, ...asliSisanya]);
 
-    if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
     setCropIndex(0);
-    setCropImageSrc(URL.createObjectURL(asliUtama));
+    const dataUrl = await bacaSebagaiDataUrl(asliUtama);
+    setCropImageSrc(dataUrl);
     setCropModalOpen(true);
   };
 
-  const bukaCropUtama = () => {
+  const bukaCropUtama = async () => {
     if (!imagesAsli[0]) return;
-    if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
     setCropIndex(0);
-    setCropImageSrc(URL.createObjectURL(imagesAsli[0]));
+    const dataUrl = await bacaSebagaiDataUrl(imagesAsli[0]);
+    setCropImageSrc(dataUrl);
     setCropModalOpen(true);
   };
   const handleSimpanCrop = (fileHasilCrop) => {
     setImages((prev) =>
       prev.map((file, i) => (i === cropIndex ? fileHasilCrop : file)),
     );
-    if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
     setCropModalOpen(false);
     setCropIndex(null);
   };
@@ -633,10 +645,7 @@ const KelolaMobil = () => {
           <CropModal
             imageSrc={cropImageSrc}
             fileName={imagesAsli[cropIndex]?.name || "foto-utama.jpg"}
-            onClose={() => {
-              if (cropImageSrc) URL.revokeObjectURL(cropImageSrc);
-              setCropModalOpen(false);
-            }}
+            onClose={() => setCropModalOpen(false)}
             onSimpan={handleSimpanCrop}
           />
         )}
