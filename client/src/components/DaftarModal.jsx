@@ -200,6 +200,19 @@ function DaftarModal({ setLoggedIn }) {
             )}
           </button>
         </form>
+        <p className="text-center text-sm text-gray-500 mt-3">
+          Sudah punya akun?{" "}
+          <button
+            type="button"
+            onClick={() => {
+              document.getElementById("my_modal_2").close();
+              document.getElementById("my_modal_1").showModal();
+            }}
+            className="text-red-700 font-semibold hover:underline"
+          >
+            Silakan login di sini
+          </button>
+        </p>
         <div className="modal-action">
           <form method="dialog">
             <button className="btn">Tutup</button>
