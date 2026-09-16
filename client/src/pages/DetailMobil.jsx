@@ -124,8 +124,8 @@ function DetailMobil() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-[1.15fr_1fr] gap-6">
           {/* kiri: Galeri Foto */}
-          <div className="relative">
-            <div className="absolute inset-[10px_-10px_-10px_10px] bg-gradient-to-br from-red-600 to-red-900 rounded-2xl hidden md:block"></div>
+          <div className="relative self-start">
+            <div className="absolute inset-[3%_-3%_-3%_3%] bg-gradient-to-br from-red-600 to-red-900 rounded-2xl hidden md:block"></div>
             <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg">
               <div className="relative">
                 <span className="absolute top-4 left-4 bg-white text-red-700 text-xs  font-extrabold px-3.5 py-1.5 rounded-full shadow z-10">
