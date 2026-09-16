@@ -44,6 +44,17 @@ const CropModal = ({ imageSrc, fileName, onClose, onSimpan }) => {
           </button>
         </div>
 
+        <div className="px-5 pt-2">
+          <p className="text-[10px] text-gray-400 mb-1">
+            [TES] Foto di bawah ini pakai tag &lt;img&gt; biasa, bukan Cropper:
+          </p>
+          <img
+            src={imageSrc}
+            alt="tes"
+            className="w-16 h-16 object-cover rounded border-2 border-blue-500"
+          />
+        </div>
+
         <div className="relative h-72 bg-gray-900">
           <Cropper
             image={imageSrc}
