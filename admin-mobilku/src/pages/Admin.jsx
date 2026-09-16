@@ -276,6 +276,14 @@ const Admin = () => {
         <GantiPasswordModal onClose={() => setPasswordModalTerbuka(false)} />
       )}
 
+      {debugOverflow.length > 0 && (
+        <div className="fixed bottom-16 md:bottom-0 left-0 right-0 z-[999] bg-yellow-300 text-black text-[10px] p-2 max-h-40 overflow-y-auto">
+          {debugOverflow.map((baris, i) => (
+            <div key={i}>{baris}</div>
+          ))}
+        </div>
+      )}
+
       {jejakOverflow.length > 0 && (
         <div className="fixed bottom-32 md:bottom-16 left-0 right-0 z-[999] bg-orange-300 text-black text-[10px] p-2 max-h-40 overflow-y-auto">
           <div className="font-bold">Jejak elemen terlebar:</div>
