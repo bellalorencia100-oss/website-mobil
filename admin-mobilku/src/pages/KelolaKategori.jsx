@@ -111,6 +111,11 @@ const KelolaKategori = () => {
 
   return (
     <div className="w-full">
+      {isSubmitting && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
       {hapusLoading && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
           <span className="loading loading-spinner loading-lg text-white"></span>
@@ -226,30 +231,26 @@ const KelolaKategori = () => {
           <h3 className="font-bold text-lg text-red-700 mb-1">
             {editId ? "Edit Kategori" : "Tambah Kategori"}
           </h3>
-          {isSubmitting ? (
-            <div className="flex justify-center items-center h-40 rounded-lg">
-              <span className="loading loading-spinner loading-lg"></span>
-            </div>
-          ) : (
-            <form onSubmit={handleTambahKategori}>
-              <input
-                type="file"
-                onChange={(e) => setIcon(e.target.files[0])}
-                className="file-input file-input-bordered w-full"
-              />
-              <label className="block mt-1">Nama Kategori</label>
-              <input
-                type="text"
-                placeholder="Nama Kategori"
-                value={nama}
-                onChange={(e) => setNama(e.target.value)}
-                className="input input-bordered w-full mt-1 text-gray-400"
-              />
-              <button className="btn bg-red-700 text-white hover:bg-red-800 mt-1">
-                Submit
-              </button>
-            </form>
-          )}
+
+          <form onSubmit={handleTambahKategori}>
+            <input
+              type="file"
+              onChange={(e) => setIcon(e.target.files[0])}
+              className="file-input file-input-bordered w-full"
+            />
+            <label className="block mt-1">Nama Kategori</label>
+            <input
+              type="text"
+              placeholder="Nama Kategori"
+              value={nama}
+              onChange={(e) => setNama(e.target.value)}
+              className="input input-bordered w-full mt-1 text-gray-400"
+            />
+            <button className="btn bg-red-700 text-white hover:bg-red-800 mt-1">
+              Submit
+            </button>
+          </form>
+
           <div className="modal-action">
             <form method="dialog">
               <button className="btn">Tutup</button>

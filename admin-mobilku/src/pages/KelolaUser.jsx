@@ -157,11 +157,17 @@ const KelolaUser = () => {
 
   return (
     <div className="w-full">
+      {isSubmitting && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
       {hapusLoading && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
           <span className="loading loading-spinner loading-lg text-white"></span>
         </div>
       )}
+
       <div className="mb-4 md:hidden">
         <h1 className="text-xl font-extrabold text-gray-900">Kelola User</h1>
         <p className="text-xs text-gray-500 mt-0.5">
@@ -276,76 +282,69 @@ const KelolaUser = () => {
           <h3 className="font-bold text-lg">
             {editId ? "Edit User" : "Tambah User"}
           </h3>
+          <form onSubmit={handleTambahUser}>
+            <label className="block mt-1">Username</label>
+            <input
+              type="text"
+              placeholder="Username"
+              className="input input-bordered w-full mt-2 text-gray-400"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
 
-          {isSubmitting ? (
-            <div className="flex justify-center items-center h-40">
-              <span className="loading loading-spinner loading-lg"></span>
-            </div>
-          ) : (
-            <form onSubmit={handleTambahUser}>
-              <label className="block mt-1">Username</label>
-              <input
-                type="text"
-                placeholder="Username"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
+            <label className="block mt-1">Email</label>
+            <input
+              type="email"
+              placeholder="Email"
+              className="input input-bordered w-full mt-2 text-gray-400"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-              <label className="block mt-1">Email</label>
-              <input
-                type="email"
-                placeholder="Email"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+            <label className="block mt-1">Nama Lengkap</label>
+            <input
+              type="text"
+              placeholder="Nama lengkap"
+              className="input input-bordered w-full mt-2 text-gray-400"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
 
-              <label className="block mt-1">Nama Lengkap</label>
-              <input
-                type="text"
-                placeholder="Nama lengkap"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
+            <label className="block mt-1">Role</label>
+            <input
+              type="text"
+              placeholder="Role"
+              className="input input-bordered w-full mt-2 text-gray-400"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            />
 
-              <label className="block mt-1">Role</label>
-              <input
-                type="text"
-                placeholder="Role"
-                className="input input-bordered w-full mt-2 text-gray-400"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              />
-
-              {!editId && (
-                <div>
-                  <label>Password</label>
-                  <div className="relative mt-2">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      className="input input-bordered w-full pr-10 text-gray-400"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
-                    >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
-                    </button>
-                  </div>
+            {!editId && (
+              <div>
+                <label>Password</label>
+                <div className="relative mt-2">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    className="input input-bordered w-full pr-10 text-gray-400"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
-              )}
+              </div>
+            )}
 
-              <button className="btn bg-red-700 text-white hover:bg-red-800 mt-2">
-                Submit
-              </button>
-            </form>
-          )}
+            <button className="btn bg-red-700 text-white hover:bg-red-800 mt-2">
+              Submit
+            </button>
+          </form>
 
           <div className="modal-action">
             <form method="dialog">

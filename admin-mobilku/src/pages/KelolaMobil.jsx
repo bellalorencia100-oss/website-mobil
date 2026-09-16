@@ -261,6 +261,12 @@ const KelolaMobil = () => {
           <span className="loading loading-spinner loading-lg text-white"></span>
         </div>
       )}
+
+      {isSubmitting && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
       <div className="mb-4 md:hidden">
         <h1 className="text-xl font-extrabold text-gray-900">Kelola Mobil</h1>
         <p className="text-xs text-gray-500 mt-0.5">
@@ -420,239 +426,233 @@ const KelolaMobil = () => {
             </button>
           </div>
 
-          {isSubmitting ? (
-            <div className="flex-1 flex justify-center items-center">
-              <span className="loading loading-spinner loading-lg"></span>
-            </div>
-          ) : (
-            <form
-              onSubmit={handleTambahMobil}
-              className="flex-1 flex flex-col min-h-0"
-            >
-              <div className="flex-1 overflow-y-auto px-4 py-3">
-                <label>Nama Mobil</label>
-                <input
-                  type="text"
-                  placeholder="Nama Mobil"
-                  className="input input-bordered w-full mt-2 text-gray-400"
-                  value={nama}
-                  onChange={(e) => setNama(e.target.value)}
-                />
+          <form
+            onSubmit={handleTambahMobil}
+            className="flex-1 flex flex-col min-h-0"
+          >
+            <div className="flex-1 overflow-y-auto px-4 py-3">
+              <label>Nama Mobil</label>
+              <input
+                type="text"
+                placeholder="Nama Mobil"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={nama}
+                onChange={(e) => setNama(e.target.value)}
+              />
 
-                <label className="block mt-1">Deskripsi</label>
-                <input
-                  type="text"
-                  placeholder="Deskripsi"
-                  className="input input-bordered w-full mt-2 text-gray-400"
-                  value={deskripsi}
-                  onChange={(e) => setDeskripsi(e.target.value)}
-                />
+              <label className="block mt-1">Deskripsi</label>
+              <input
+                type="text"
+                placeholder="Deskripsi"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={deskripsi}
+                onChange={(e) => setDeskripsi(e.target.value)}
+              />
 
-                <label className="block mt-1">Tahun</label>
-                <input
-                  type="number"
-                  placeholder="Tahun"
-                  className="input input-bordered w-full mt-2 text-gray-400"
-                  value={tahun}
-                  onChange={(e) => setTahun(e.target.value)}
-                />
+              <label className="block mt-1">Tahun</label>
+              <input
+                type="number"
+                placeholder="Tahun"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={tahun}
+                onChange={(e) => setTahun(e.target.value)}
+              />
 
-                <label className="block mt-1">Harga</label>
-                <input
-                  type="number"
-                  placeholder="Harga"
-                  className="input input-bordered w-full mt-2 text-gray-400"
-                  value={harga}
-                  onChange={(e) => setHarga(e.target.value)}
-                />
+              <label className="block mt-1">Harga</label>
+              <input
+                type="number"
+                placeholder="Harga"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={harga}
+                onChange={(e) => setHarga(e.target.value)}
+              />
 
-                <label className="block mt-1">Stok</label>
-                <input
-                  type="number"
-                  placeholder="Stok"
-                  className="input input-bordered w-full mt-2 text-gray-400"
-                  value={stok}
-                  onChange={(e) => setStok(e.target.value)}
-                />
+              <label className="block mt-1">Stok</label>
+              <input
+                type="number"
+                placeholder="Stok"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={stok}
+                onChange={(e) => setStok(e.target.value)}
+              />
 
-                <label className="block mt-1">Kilometer</label>
-                <input
-                  type="number"
-                  placeholder="Kilometer (contoh: 35000)"
-                  className="input input-bordered w-full mt-2 text-gray-400"
-                  value={kilometer}
-                  onChange={(e) => setKilometer(e.target.value)}
-                />
+              <label className="block mt-1">Kilometer</label>
+              <input
+                type="number"
+                placeholder="Kilometer (contoh: 35000)"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={kilometer}
+                onChange={(e) => setKilometer(e.target.value)}
+              />
 
-                <label className="block mt-1">Kapasitas Mesin (cc)</label>
-                <input
-                  type="number"
-                  placeholder="Kapasitas Mesin (contoh: 1500)"
-                  className="input input-bordered w-full mt-2 text-gray-400"
-                  value={kapasitasMesin}
-                  onChange={(e) => setKapasitasMesin(e.target.value)}
-                />
+              <label className="block mt-1">Kapasitas Mesin (cc)</label>
+              <input
+                type="number"
+                placeholder="Kapasitas Mesin (contoh: 1500)"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={kapasitasMesin}
+                onChange={(e) => setKapasitasMesin(e.target.value)}
+              />
 
-                <label className="block mt-1">Warna</label>
-                <input
-                  type="text"
-                  placeholder="Warna (contoh: Putih)"
-                  className="input input-bordered w-full mt-2 text-gray-400"
-                  value={warna}
-                  onChange={(e) => setWarna(e.target.value)}
-                />
+              <label className="block mt-1">Warna</label>
+              <input
+                type="text"
+                placeholder="Warna (contoh: Putih)"
+                className="input input-bordered w-full mt-2 text-gray-400"
+                value={warna}
+                onChange={(e) => setWarna(e.target.value)}
+              />
 
-                <select
-                  className="select select-bordered w-full mt-3"
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                >
-                  <option value="">Pilih Kategori</option>
-                  {dataKategori.map((kategori, index) => (
-                    <option key={index} value={kategori.id}>
-                      {kategori.name}
-                    </option>
-                  ))}
-                </select>
+              <select
+                className="select select-bordered w-full mt-3"
+                value={categoryId}
+                onChange={(e) => setCategoryId(e.target.value)}
+              >
+                <option value="">Pilih Kategori</option>
+                {dataKategori.map((kategori, index) => (
+                  <option key={index} value={kategori.id}>
+                    {kategori.name}
+                  </option>
+                ))}
+              </select>
 
-                <select
-                  className="select select-bordered w-full mt-3"
-                  value={merek}
-                  onChange={(e) => setMerek(e.target.value)}
-                >
-                  <option value="">Pilih Merek</option>
-                  <option value="Byd">Byd</option>
-                  <option value="Honda">Honda</option>
-                  <option value="Mercedes Benz">Mercedes Benz</option>
-                  <option value="Hyundai">Hyundai</option>
-                  <option value="Toyota">Toyota</option>
-                  <option value="Mitsubishi">Mitsubishi</option>
-                  <option value="Chevrolet">Chevrolet</option>
-                  <option value="Suzuki">Suzuki</option>
-                  <option value="Nissan">Nissan</option>
-                  <option value="Isuzu">Isuzu</option>
-                  <option value="Mazda">Mazda</option>
-                  <option value="Dfsk">Dfsk</option>
-                  <option value="Ford">Ford</option>
-                  <option value="MG">MG</option>
-                  <option value="Jeep">Jeep</option>
-                  <option value="Volkswagen">Volkswagen</option>
-                  <option value="Bmw">Bmw</option>
-                  <option value="Mini">Mini</option>
-                  <option value="Kia">Kia</option>
-                  <option value="Lexus">Lexus</option>
-                  <option value="Wuling">Wuling</option>
-                  <option value="Cherry">Cherry</option>
-                  <option value="Gwm">Gwm</option>
-                  <option value="Baic">Baic</option>
-                </select>
+              <select
+                className="select select-bordered w-full mt-3"
+                value={merek}
+                onChange={(e) => setMerek(e.target.value)}
+              >
+                <option value="">Pilih Merek</option>
+                <option value="Byd">Byd</option>
+                <option value="Honda">Honda</option>
+                <option value="Mercedes Benz">Mercedes Benz</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Mitsubishi">Mitsubishi</option>
+                <option value="Chevrolet">Chevrolet</option>
+                <option value="Suzuki">Suzuki</option>
+                <option value="Nissan">Nissan</option>
+                <option value="Isuzu">Isuzu</option>
+                <option value="Mazda">Mazda</option>
+                <option value="Dfsk">Dfsk</option>
+                <option value="Ford">Ford</option>
+                <option value="MG">MG</option>
+                <option value="Jeep">Jeep</option>
+                <option value="Volkswagen">Volkswagen</option>
+                <option value="Bmw">Bmw</option>
+                <option value="Mini">Mini</option>
+                <option value="Kia">Kia</option>
+                <option value="Lexus">Lexus</option>
+                <option value="Wuling">Wuling</option>
+                <option value="Cherry">Cherry</option>
+                <option value="Gwm">Gwm</option>
+                <option value="Baic">Baic</option>
+              </select>
 
-                <select
-                  className="select select-bordered w-full mt-3"
-                  value={transmisi}
-                  onChange={(e) => setTransmisi(e.target.value)}
-                >
-                  <option value="">Pilih Transmisi</option>
-                  <option value="Manual">Manual</option>
-                  <option value="Automatic">Automatic</option>
-                </select>
+              <select
+                className="select select-bordered w-full mt-3"
+                value={transmisi}
+                onChange={(e) => setTransmisi(e.target.value)}
+              >
+                <option value="">Pilih Transmisi</option>
+                <option value="Manual">Manual</option>
+                <option value="Automatic">Automatic</option>
+              </select>
 
-                <select
-                  className="select select-bordered w-full mt-3"
-                  value={bahanBakar}
-                  onChange={(e) => setBahanBakar(e.target.value)}
-                >
-                  <option value="">Pilih Bahan Bakar</option>
-                  <option value="Bensin">Bensin</option>
-                  <option value="Solar">Solar</option>
-                  <option value="Hybrid">Hybrid</option>
-                  <option value="Listrik">Listrik</option>
-                </select>
+              <select
+                className="select select-bordered w-full mt-3"
+                value={bahanBakar}
+                onChange={(e) => setBahanBakar(e.target.value)}
+              >
+                <option value="">Pilih Bahan Bakar</option>
+                <option value="Bensin">Bensin</option>
+                <option value="Solar">Solar</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Listrik">Listrik</option>
+              </select>
 
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  className="file-input file-input-bordered w-full mt-3"
-                  onChange={handlePilihFoto}
-                />
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                className="file-input file-input-bordered w-full mt-3"
+                onChange={handlePilihFoto}
+              />
 
-                {editId && fotoLama.length > 0 && images.length === 0 && (
-                  <div className="mt-2">
-                    <p className="text-xs text-gray-500 mb-1">
-                      Foto saat ini (akan tetap dipakai jika tidak pilih foto
-                      baru):
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {fotoLama.map((url, index) => (
-                        <img
-                          key={index}
-                          src={url}
-                          alt={`foto-lama-${index}`}
-                          className="w-16 h-16 object-cover rounded border"
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {images.length > 0 && (
-                  <div className="flex flex-wrap gap-3 mt-2">
-                    {images.map((file, index) => (
-                      <div key={index} className="w-20">
-                        <div className="relative">
-                          <img
-                            src={previewUrls[index]}
-                            alt={`preview-${index}`}
-                            className={`w-20 h-20 object-cover rounded border ${
-                              index === 0 ? "ring-2 ring-red-700" : ""
-                            }`}
-                          />
-                          {index === 0 && (
-                            <span className="absolute -top-1 -left-1 bg-red-700 text-white text-[9px] font-bold px-1.5 rounded">
-                              Utama
-                            </span>
-                          )}
-                        </div>
-
-                        {index === 0 ? (
-                          <button
-                            type="button"
-                            onClick={bukaCropUtama}
-                            onTouchEnd={(e) => {
-                              e.preventDefault();
-                              bukaCropUtama();
-                            }}
-                            className="mt-1 w-full bg-white border border-gray-300 text-[10px] font-bold py-1.5 rounded text-center"
-                          >
-                            Atur Frame
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => handleJadikanUtama(index)}
-                            onTouchEnd={(e) => {
-                              e.preventDefault();
-                              handleJadikanUtama(index);
-                            }}
-                            className="mt-1 w-full bg-white border border-gray-300 text-[10px] font-bold py-1.5 rounded text-center"
-                          >
-                            Jadikan Utama
-                          </button>
-                        )}
-                      </div>
+              {editId && fotoLama.length > 0 && images.length === 0 && (
+                <div className="mt-2">
+                  <p className="text-xs text-gray-500 mb-1">
+                    Foto saat ini (akan tetap dipakai jika tidak pilih foto
+                    baru):
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {fotoLama.map((url, index) => (
+                      <img
+                        key={index}
+                        src={url}
+                        alt={`foto-lama-${index}`}
+                        className="w-16 h-16 object-cover rounded border"
+                      />
                     ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
-              <div className="px-4 py-3 border-t border-gray-200 flex-shrink-0">
-                <button className="btn bg-red-700 text-white hover:bg-red-800 w-full md:w-auto">
-                  Submit
-                </button>
-              </div>
-            </form>
-          )}
+              {images.length > 0 && (
+                <div className="flex flex-wrap gap-3 mt-2">
+                  {images.map((file, index) => (
+                    <div key={index} className="w-20">
+                      <div className="relative">
+                        <img
+                          src={previewUrls[index]}
+                          alt={`preview-${index}`}
+                          className={`w-20 h-20 object-cover rounded border ${
+                            index === 0 ? "ring-2 ring-red-700" : ""
+                          }`}
+                        />
+                        {index === 0 && (
+                          <span className="absolute -top-1 -left-1 bg-red-700 text-white text-[9px] font-bold px-1.5 rounded">
+                            Utama
+                          </span>
+                        )}
+                      </div>
+
+                      {index === 0 ? (
+                        <button
+                          type="button"
+                          onClick={bukaCropUtama}
+                          onTouchEnd={(e) => {
+                            e.preventDefault();
+                            bukaCropUtama();
+                          }}
+                          className="mt-1 w-full bg-white border border-gray-300 text-[10px] font-bold py-1.5 rounded text-center"
+                        >
+                          Atur Frame
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleJadikanUtama(index)}
+                          onTouchEnd={(e) => {
+                            e.preventDefault();
+                            handleJadikanUtama(index);
+                          }}
+                          className="mt-1 w-full bg-white border border-gray-300 text-[10px] font-bold py-1.5 rounded text-center"
+                        >
+                          Jadikan Utama
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="px-4 py-3 border-t border-gray-200 flex-shrink-0">
+              <button className="btn bg-red-700 text-white hover:bg-red-800 w-full md:w-auto">
+                Submit
+              </button>
+            </div>
+          </form>
 
           <div className="modal-action px-4 pb-4 flex-shrink-0">
             <form method="dialog">
