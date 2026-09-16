@@ -8,6 +8,7 @@ const KelolaKategori = () => {
   const [editId, setEditId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hapusLoading, setHapusLoading] = useState(false);
 
   useEffect(() => {
     axios.get("/api/categories").then((response) => {
@@ -75,6 +76,7 @@ const KelolaKategori = () => {
 
   const handleHapusKategori = (id) => {
     if (window.confirm("yakin mau hapus kategori ini")) {
+      setHapusLoading(true);
       axios
         .delete(`/api/categories/${id}`, {
           headers: {
@@ -85,10 +87,12 @@ const KelolaKategori = () => {
           alert(response.data.message);
           axios.get("/api/categories").then((response) => {
             setDataKategori(response.data.categories);
+            setHapusLoading(false);
           });
         })
         .catch((error) => {
           alert(error.response.data.message);
+          setHapusLoading(false);
         });
     }
   };
@@ -107,6 +111,11 @@ const KelolaKategori = () => {
 
   return (
     <div className="w-full">
+      {hapusLoading && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
       <div className="mb-4 md:hidden">
         <h1 className="text-xl font-extrabold text-gray-900">
           Kelola Kategori

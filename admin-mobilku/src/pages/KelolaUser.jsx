@@ -13,6 +13,7 @@ const KelolaUser = () => {
   const [editId, setEditId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hapusLoading, setHapusLoading] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -118,6 +119,7 @@ const KelolaUser = () => {
 
   const handleHapusUser = (id) => {
     if (window.confirm("yakin mau menghapus user id ini")) {
+      setHapusLoading(true);
       axios
         .delete(`/api/users/${id}`, {
           headers: {
@@ -134,11 +136,13 @@ const KelolaUser = () => {
             })
             .then((response) => {
               setDataUser(response.data.users);
+              setHapusLoading(false);
             });
         })
 
         .catch((error) => {
           alert(error.response.data.message);
+          setHapusLoading(false);
         });
     }
   };
@@ -153,6 +157,11 @@ const KelolaUser = () => {
 
   return (
     <div className="w-full">
+      {hapusLoading && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
       <div className="mb-4 md:hidden">
         <h1 className="text-xl font-extrabold text-gray-900">Kelola User</h1>
         <p className="text-xs text-gray-500 mt-0.5">

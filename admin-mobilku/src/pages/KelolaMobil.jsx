@@ -25,6 +25,7 @@ const KelolaMobil = () => {
   const [editId, setEditId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hapusLoading, setHapusLoading] = useState(false);
   const [merek, setMerek] = useState("");
   const [kilometer, setKilometer] = useState("");
   const [transmisi, setTransmisi] = useState("");
@@ -211,6 +212,7 @@ const KelolaMobil = () => {
   };
   const handleHapusMobil = (id) => {
     if (window.confirm("Yakin mau hapus mobil ini?")) {
+      setHapusLoading(true);
       axios
         .delete(`/api/mobil/${id}`, {
           headers: {
@@ -222,10 +224,12 @@ const KelolaMobil = () => {
           alert(response.data.message);
           axios.get("/api/mobil").then((response) => {
             setDataMobil(response.data.mobil);
+            setHapusLoading(false);
           });
         })
         .catch((error) => {
           alert(error.response.data.message);
+          setHapusLoading(false);
         });
     }
   };
@@ -252,6 +256,11 @@ const KelolaMobil = () => {
 
   return (
     <div className="w-full">
+      {hapusLoading && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
       <div className="mb-4 md:hidden">
         <h1 className="text-xl font-extrabold text-gray-900">Kelola Mobil</h1>
         <p className="text-xs text-gray-500 mt-0.5">
