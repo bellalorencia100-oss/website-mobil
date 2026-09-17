@@ -204,7 +204,7 @@ function Home() {
           </div>
           <div className="flex flex-nowrap justify-center items-start gap-x-5 md:gap-x-8 overflow-x-auto px-4 mt-6 md:mt-10 max-w-4xl mx-auto">
             {dataKategori.map((kategori) => (
-              <div key={kategori.id} className="shrink-0 scale-80 md:scale-100">
+              <div key={kategori.id} className="shrink-0">
                 <CategoryCard
                   name={kategori.name}
                   logo={getImageUrl(kategori.icon)}
