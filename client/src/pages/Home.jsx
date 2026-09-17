@@ -202,9 +202,9 @@ function Home() {
               <span className="text-red-700">Kategori Mobil</span>
             </h2>
           </div>
-          <div className="flex flex-nowrap justify-center items-start gap-x-5 md:gap-x-8 overflow-x-auto px-4 mt-6 md:mt-10 max-w-4xl mx-auto">
+          <div className="flex flex-nowrap justify-center items-start gap-x-5 md:gap-x-8 overflow-x-auto snap-x snap-mandatory scroll-px-4 px-4 mt-6 md:mt-10 max-w-4xl mx-auto">
             {dataKategori.map((kategori) => (
-              <div key={kategori.id} className="shrink-0">
+              <div key={kategori.id} className="shrink-0 snap-start">
                 <CategoryCard
                   name={kategori.name}
                   logo={getImageUrl(kategori.icon)}
