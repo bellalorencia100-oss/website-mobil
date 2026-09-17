@@ -57,7 +57,7 @@ function Navbar() {
   };
 
   return (
-    <nav>
+    <nav className="sticky top-0 z-40">
       <div className="drawer">
         <input id="my-drawer-1" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
