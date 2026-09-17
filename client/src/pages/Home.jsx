@@ -207,7 +207,7 @@ function Home() {
             {dataKategori.map((kategori) => (
               <div
                 key={kategori.id}
-                className="w-1/6 shrink-0 snap-start flex justify-center"
+                className="w-1/6 md:w-[12.5%] shrink-0 snap-start flex justify-center"
               >
                 <CategoryCard
                   name={kategori.name}
